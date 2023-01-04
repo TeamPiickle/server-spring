@@ -18,10 +18,12 @@ public class Card extends BaseEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FILTER_ID")
     private List<Filter> filters = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "TAG_ID")
     private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)

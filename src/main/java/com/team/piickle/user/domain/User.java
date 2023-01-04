@@ -35,6 +35,7 @@ public class User extends BaseEntity {
     @Column(name = "PROFILE_IMAGE_URL")
     private String profileImageUrl;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CARD_ID")
     private List<Card> cards = new ArrayList<>();
 }
