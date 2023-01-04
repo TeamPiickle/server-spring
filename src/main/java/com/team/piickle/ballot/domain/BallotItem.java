@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AttributeOverride(name = "id", column = @Column(name = "BALLOT_TOPIC_ID"))
+@AttributeOverride(name = "id", column = @Column(name = "BALLOT_ITEM_ID"))
 @Entity
 public class BallotItem extends BaseEntity {
 
