@@ -1,4 +1,4 @@
-package com.team.piickle.card.domain;
+package com.team.piickle.card.filter;
 
 import com.team.piickle.common.domain.BaseEntity;
 import lombok.AccessLevel;
