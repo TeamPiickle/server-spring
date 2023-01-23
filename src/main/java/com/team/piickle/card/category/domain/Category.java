@@ -1,7 +1,7 @@
-package com.team.piickle.category.domain;
+package com.team.piickle.card.category.domain;
 
-import com.team.piickle.card.domain.Card;
 import com.team.piickle.common.domain.BaseEntity;
+import javax.persistence.CascadeType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +19,18 @@ import java.util.List;
 @Entity
 public class Category extends BaseEntity {
 
+    @Column(name = "TITLE")
     private String title;
 
+    @Column(name = "CONTENT")
     private String content;
 
-    private String imgUrl;
+    @Column(name = "GRADATION")
+    private String gradation;
 
-    @OneToMany
-    private List<Card> cards = new ArrayList<>();
+    @Column(name = "EMOJI")
+    private String emoji;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<CardCategory> cards = new ArrayList<>();
 }
