@@ -1,14 +1,18 @@
 package com.team.piickle.common.domain;
 
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,14 +24,16 @@ public class BaseEntity {
     private Long id;
 
     @CreatedDate
-    private LocalDateTime createdDate;
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
 
-    protected BaseEntity(Long id, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    protected BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }
