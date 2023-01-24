@@ -1,6 +1,6 @@
-package com.team.piickle.category.controller;
+package com.team.piickle.card.category.controller;
 
-import com.team.piickle.category.service.CategoryService;
+import com.team.piickle.card.category.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 

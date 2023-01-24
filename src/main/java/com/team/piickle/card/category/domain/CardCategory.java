@@ -1,6 +1,6 @@
-package com.team.piickle.card.domain;
+package com.team.piickle.card.category.domain;
 
-import com.team.piickle.category.domain.Category;
+import com.team.piickle.card.domain.Card;
 import com.team.piickle.common.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;

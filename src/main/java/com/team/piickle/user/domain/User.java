@@ -1,5 +1,6 @@
 package com.team.piickle.user.domain;
 
+import com.team.piickle.bookmark.domain.Bookmark;
 import com.team.piickle.card.domain.Card;
 import com.team.piickle.common.domain.BaseEntity;
 import lombok.AccessLevel;
@@ -26,7 +27,7 @@ public class User extends BaseEntity {
     private String nickName;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "GENDER", nullable = false)
     private GenderStatus gender;
 
     @Column(name = "HASHED_PASSWORD")
@@ -35,7 +36,6 @@ public class User extends BaseEntity {
     @Column(name = "PROFILE_IMAGE_URL")
     private String profileImageUrl;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CARD_ID")
-    private List<Card> cards = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Bookmark> bookmarks = new ArrayList<>();
 }
