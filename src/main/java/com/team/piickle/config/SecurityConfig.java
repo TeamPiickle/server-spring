@@ -40,7 +40,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web
                 .ignoring()
-                .antMatchers("/h2-console/**", "/favicon.ico");
+                .antMatchers("/h2-console/**", "/favicon.ico", "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico");
     }
 
     @Bean
@@ -63,11 +63,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/**").permitAll()
-                .antMatchers("/**", "/me", "/h2-console/**", "/login/**", "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico").permitAll()
-                .antMatchers("/users/login", "/api/token/refresh/**").permitAll()
-                .antMatchers("/users/signup").permitAll()
-                .antMatchers("/users/authenticate").permitAll()
+                .antMatchers("/users", "/users/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(jwtAuthenticationFilter)
