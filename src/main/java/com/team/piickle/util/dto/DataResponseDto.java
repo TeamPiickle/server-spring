@@ -2,7 +2,6 @@ package com.team.piickle.util.dto;
 
 import com.team.piickle.util.StatusCode;
 import lombok.Getter;
-import org.aspectj.apache.bcel.classfile.Code;
 
 @Getter
 public class DataResponseDto<T> extends ResponseDto {
@@ -19,11 +18,11 @@ public class DataResponseDto<T> extends ResponseDto {
         this.data = data;
     }
 
-    public static <T> DataResponseDto<T> of (T data) {
+    public static <T> DataResponseDto<T> of(T data) {
         return new DataResponseDto<>(data);
     }
 
-    public static <T> DataResponseDto<T> of (T data, String message) {
+    public static <T> DataResponseDto<T> of(T data, String message) {
         return new DataResponseDto<>(data, message);
     }
 

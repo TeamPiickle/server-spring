@@ -4,6 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.piickle.common.exception.GeneralException;
 import com.team.piickle.user.dto.UserLoginRequestDto;
 import com.team.piickle.util.dto.DataResponseDto;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -14,14 +21,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -30,18 +29,29 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final TokenProvider tokenProvider;
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(
+            HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            UserLoginRequestDto userLoginRequestDto = new ObjectMapper().readValue(request.getReader(), UserLoginRequestDto.class);
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
-            return authenticationManagerBuilder.getObject().authenticate(usernamePasswordAuthenticationToken);
+            UserLoginRequestDto userLoginRequestDto =
+                    new ObjectMapper().readValue(request.getReader(), UserLoginRequestDto.class);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
+            return authenticationManagerBuilder
+                    .getObject()
+                    .authenticate(usernamePasswordAuthenticationToken);
         } catch (IOException e) {
             throw new GeneralException(e);
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws ServletException, IOException {
+    protected void successfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain,
+            Authentication authResult)
+            throws ServletException, IOException {
         User user = (User) authResult.getPrincipal();
         String token = tokenProvider.createToken(authResult);
         response.addHeader("Authorization", "Bearer " + token);

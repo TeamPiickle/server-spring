@@ -2,11 +2,10 @@ package com.team.piickle.ballot.domain;
 
 import com.team.piickle.common.domain.BaseEntity;
 import com.team.piickle.user.domain.User;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
