@@ -1,8 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.7'
+    id 'org.springframework.boot'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id "com.diffplug.spotless" version '6.14.0'
+    id "com.diffplug.spotless"
 }
 
 group = 'com.team'
@@ -27,21 +27,21 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.auth0:java-jwt:4.2.1'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	implementation Spring.boot.data.jpa
+	implementation Spring.boot.security
+	implementation Spring.boot.validation
+	implementation Spring.boot.web
+	implementation 'com.auth0:java-jwt:_'
+	implementation 'io.jsonwebtoken:jjwt-api:_'
+	implementation 'io.jsonwebtoken:jjwt-impl:_'
+	implementation 'io.jsonwebtoken:jjwt-jackson:_'
+	compileOnly 'org.projectlombok:lombok:_'
+	runtimeOnly 'com.mysql:mysql-connector-j:_'
+	runtimeOnly 'com.h2database:h2:_'
+	annotationProcessor 'org.projectlombok:lombok:_'
+	annotationProcessor Spring.boot.configurationProcessor
+	testImplementation Spring.boot.test
+	testImplementation Spring.security.spring_security_test
 }
 
 tasks.named('test') {
