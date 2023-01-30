@@ -2,11 +2,10 @@ package com.team.piickle.user.domain;
 
 import com.team.piickle.bookmark.domain.Bookmark;
 import com.team.piickle.common.domain.BaseEntity;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.*;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

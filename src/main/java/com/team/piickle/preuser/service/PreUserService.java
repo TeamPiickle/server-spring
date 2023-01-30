@@ -5,6 +5,4 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class PreUserService {
-
-}
+public class PreUserService {}

@@ -27,7 +27,8 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration)
+            throws Exception {
         return authConfiguration.getAuthenticationManager();
     }
 
@@ -38,18 +39,26 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web
-                .ignoring()
-                .antMatchers("/h2-console/**", "/favicon.ico", "/js/**", "/css/**", "/image/**", "/fonts/**", "/favicon.ico");
+        return (web) ->
+                web.ignoring()
+                        .antMatchers(
+                                "/h2-console/**",
+                                "/favicon.ico",
+                                "/js/**",
+                                "/css/**",
+                                "/image/**",
+                                "/fonts/**",
+                                "/favicon.ico");
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManagerBuilder, tokenProvider);
+        JwtAuthenticationFilter jwtAuthenticationFilter =
+                new JwtAuthenticationFilter(authenticationManagerBuilder, tokenProvider);
         jwtAuthenticationFilter.setFilterProcessesUrl("/users/login");
 
-        http
-                .csrf().disable()
+        http.csrf()
+                .disable()
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -63,11 +72,14 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users", "/users/login").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/users", "/users/login")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .addFilter(jwtAuthenticationFilter)
-                .addFilterBefore(new JwtAuthorizationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                        new JwtAuthorizationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

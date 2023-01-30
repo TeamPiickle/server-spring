@@ -26,5 +26,4 @@ public class BallotTopic extends BaseEntity {
 
     @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
     private List<BallotItem> ballotItems = new ArrayList<>();
-
 }
