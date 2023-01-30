@@ -1,11 +1,8 @@
 package com.team.piickle.user.domain;
 
 import com.team.piickle.bookmark.domain.Bookmark;
-import com.team.piickle.card.domain.Card;
 import com.team.piickle.common.domain.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +11,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverride(name = "id", column = @Column(name = "USER_ID"))
+@Builder
+@AllArgsConstructor
+@Table(name = "USERS")
 @Entity
 public class User extends BaseEntity {
 
