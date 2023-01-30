@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class BallotItem extends BaseEntity {
 
-    @Column(name = "NAME")private String name;
+    @Column(name = "NAME")
+    private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BALLOT_TOPIC_ID")
