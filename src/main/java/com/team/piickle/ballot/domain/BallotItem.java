@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class BallotItem extends BaseEntity {
 
-    @Column(name = "NAME")
+    @Column
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
