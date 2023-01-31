@@ -24,11 +24,11 @@ public class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(name = "CREATED_AT")
+    @Column
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "UPDATED_AT")
+    @Column
     private LocalDateTime updatedAt;
 
     protected BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {

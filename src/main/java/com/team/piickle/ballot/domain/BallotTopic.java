@@ -18,10 +18,10 @@ import lombok.NoArgsConstructor;
 @Entity
 public class BallotTopic extends BaseEntity {
 
-    @Column(name = "TOPIC")
+    @Column
     private String topic;
 
-    @Column(name = "SORT_ORDER")
+    @Column
     private Long order;
 
     @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
