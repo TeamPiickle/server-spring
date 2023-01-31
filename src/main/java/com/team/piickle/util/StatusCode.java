@@ -1,13 +1,12 @@
 package com.team.piickle.util;
 
 import com.team.piickle.common.exception.GeneralException;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
@@ -46,15 +45,16 @@ public enum StatusCode {
         return Arrays.stream(values())
                 .filter(errorCode -> errorCode.getHttpStatus() == httpStatus)
                 .findFirst()
-                .orElseGet(() -> {
-                    if (httpStatus.is4xxClientError()) {
-                        return StatusCode.BAD_REQUEST;
-                    } else if (httpStatus.is5xxServerError()) {
-                        return StatusCode.INTERNAL_ERROR;
-                    } else {
-                        return StatusCode.OK;
-                    }
-                });
+                .orElseGet(
+                        () -> {
+                            if (httpStatus.is4xxClientError()) {
+                                return StatusCode.BAD_REQUEST;
+                            } else if (httpStatus.is5xxServerError()) {
+                                return StatusCode.INTERNAL_ERROR;
+                            } else {
+                                return StatusCode.OK;
+                            }
+                        });
     }
 
     @Override

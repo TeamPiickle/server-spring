@@ -2,15 +2,13 @@ package com.team.piickle.card.domain;
 
 import com.team.piickle.card.filter.CardFilter;
 import com.team.piickle.card.tag.CardTag;
-import com.team.piickle.card.category.domain.CardCategory;
 import com.team.piickle.common.domain.BaseEntity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
