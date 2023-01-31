@@ -9,8 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties({TokenProvider.class})
 public class PiickleApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PiickleApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(PiickleApplication.class, args);
+    }
 }

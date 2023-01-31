@@ -2,7 +2,7 @@ package com.team.piickle.util.dto;
 
 import com.team.piickle.util.StatusCode;
 
-public class ErrorResponseDto extends ResponseDto{
+public class ErrorResponseDto extends ResponseDto {
     private ErrorResponseDto(StatusCode errorCode) {
         super(false, errorCode.getCode(), errorCode.getMessage());
     }
@@ -15,7 +15,6 @@ public class ErrorResponseDto extends ResponseDto{
         super(false, errorCode.getCode(), errorCode.getMessage(message));
     }
 
-
     public static ErrorResponseDto of(StatusCode errorCode) {
         return new ErrorResponseDto(errorCode);
     }
@@ -27,5 +26,4 @@ public class ErrorResponseDto extends ResponseDto{
     public static ErrorResponseDto of(StatusCode errorCode, String message) {
         return new ErrorResponseDto(errorCode, message);
     }
-
 }
