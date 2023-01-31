@@ -16,24 +16,19 @@ import lombok.*;
 @Entity
 public class User extends BaseEntity {
 
-    @Column
-    private String email;
+    @Column private String email;
 
-    @Column
-    private String name;
+    @Column private String name;
 
-    @Column
-    private String nickname;
+    @Column private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "GENDER", nullable = false)
     private GenderStatus gender;
 
-    @Column
-    private String hashedPassword;
+    @Column private String hashedPassword;
 
-    @Column
-    private String profileImageUrl;
+    @Column private String profileImageUrl;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Bookmark> bookmarks = new ArrayList<>();
