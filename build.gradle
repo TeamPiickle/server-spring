@@ -31,7 +31,9 @@ dependencies {
 	implementation Spring.boot.security
 	implementation Spring.boot.validation
 	implementation Spring.boot.web
-	implementation 'com.auth0:java-jwt:_'
+    implementation 'io.awspring.cloud:spring-cloud-aws-parameter-store-config:2.4.4'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+    implementation 'com.auth0:java-jwt:_'
 	implementation 'io.jsonwebtoken:jjwt-api:_'
 	implementation 'io.jsonwebtoken:jjwt-impl:_'
 	implementation 'io.jsonwebtoken:jjwt-jackson:_'
