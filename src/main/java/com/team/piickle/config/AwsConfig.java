@@ -1,0 +1,29 @@
+package com.team.piickle.config;
+
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConstructorBinding
+@ConfigurationProperties(prefix = "cloud.aws.credentials")
+public class AwsConfig {
+
+    private String accessKey;
+    private String secretKey;
+    private String region;
+
+    @Bean
+    public AmazonS3 amazonS3() {
+        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+        return AmazonS3ClientBuilder.standard()
+                .withRegion(region)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).build();
+    }
+}
