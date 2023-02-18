@@ -20,6 +20,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Slf4j
 @Setter
@@ -82,4 +83,12 @@ public class TokenProvider implements InitializingBean {
         }
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
     } // 토큰을 꺼내와서 점검
+
+    public String getUserId() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null) {
+            throw new RuntimeException("No authentication information.");
+        }
+        return authentication.getName();
+    }
 }
