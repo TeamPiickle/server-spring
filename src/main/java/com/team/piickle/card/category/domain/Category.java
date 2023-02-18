@@ -18,17 +18,13 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Category extends BaseEntity {
 
-    @Column(name = "TITLE")
-    private String title;
+    @Column private String title;
 
-    @Column(name = "CONTENT")
-    private String content;
+    @Column private String content;
 
-    @Column(name = "GRADATION")
-    private String gradation;
+    @Column private String gradation;
 
-    @Column(name = "EMOJI")
-    private String emoji;
+    @Column private String emoji;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<CardCategory> cards = new ArrayList<>();

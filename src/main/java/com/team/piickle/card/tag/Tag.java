@@ -14,6 +14,5 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Tag extends BaseEntity {
 
-    @Column(name = "CONTENT")
-    private String content;
+    @Column private String content;
 }

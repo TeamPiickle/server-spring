@@ -23,13 +23,9 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate
-    @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    @CreatedDate @Column private LocalDateTime createdAt;
 
-    @LastModifiedDate
-    @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
+    @LastModifiedDate @Column private LocalDateTime updatedAt;
 
     protected BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;

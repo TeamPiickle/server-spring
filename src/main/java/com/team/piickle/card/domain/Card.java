@@ -15,8 +15,7 @@ import lombok.NoArgsConstructor;
 @AttributeOverride(name = "id", column = @Column(name = "CARD_ID"))
 @Entity
 public class Card extends BaseEntity {
-    @Column(name = "CONTENT")
-    private String content;
+    @Column private String content;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<CardFilter> filters = new ArrayList<>();
