@@ -1,6 +1,9 @@
 package com.team.piickle.user.service;
 
-import com.team.piickle.auth.jwt.TokenProvider;
+import com.team.piickle.bookmark.domain.Bookmark;
+import com.team.piickle.bookmark.repository.BookmarkRepository;
+import com.team.piickle.card.domain.Card;
+import com.team.piickle.card.repository.CardRepository;
 import com.team.piickle.common.exception.GeneralException;
 import com.team.piickle.user.domain.GenderStatus;
 import com.team.piickle.user.domain.User;
@@ -33,6 +36,8 @@ import java.util.Locale;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final CardRepository cardRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final PasswordEncoder passwordEncoder;
     private final MessageSource messageSource;
     private final S3Upload s3Upload;
@@ -137,5 +142,25 @@ public class UserService implements UserDetailsService {
                 .name(user.getName())
                 .build();
         user.update(nicknameChangedUser);
+    }
+
+    @Transactional
+    public Long changeBookmark(String userId, Long cardId) {
+        User user = userRepository.findByEmail(userId)
+                .orElseThrow(() -> new GeneralException(messageSource.getMessage("USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new GeneralException(messageSource.getMessage("READ.CARD.FAIL", null, Locale.getDefault())));
+
+        Bookmark bookmark = bookmarkRepository.findByUserIdAndCardId(user.getId(), card.getId());
+
+        if (bookmark == null) {
+            bookmarkRepository.save(Bookmark.builder()
+                    .user(user)
+                    .card(card)
+                    .build());
+            return cardId;
+        }
+        bookmarkRepository.delete(bookmark);
+        return cardId;
     }
 }

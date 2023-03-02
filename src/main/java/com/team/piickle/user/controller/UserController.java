@@ -66,4 +66,11 @@ public class UserController {
         userService.updateProfileImage(tokenProvider.getUserId(), profileImageFile);
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
     }
+
+    @PutMapping("/bookmarks")
+    private ResponseEntity<ResponseDto> bookmark(@RequestBody Long cardId) {
+        String userId = tokenProvider.getUserId();
+        Long BookmarkedCardId = userService.changeBookmark(userId, cardId);
+        return new ResponseEntity<>(DataResponseDto.of(BookmarkedCardId, messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())), HttpStatus.OK);
+    }
 }
