@@ -1,7 +1,6 @@
 package com.team.piickle;
 
 import com.team.piickle.auth.jwt.TokenProvider;
-import com.team.piickle.config.AwsConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
