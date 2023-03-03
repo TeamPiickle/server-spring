@@ -10,8 +10,8 @@ cloud:
     s3:
       bucket: piiklebucket11
     credentials:
-      access-key: AKIAUBQNOB62TWHQS35O
-      secret-key: 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
+      accessKey: AKIAUBQNOB62TWHQS35O
+      secretKey: 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
     region:
       static: ap-northeast-2
       auto: false

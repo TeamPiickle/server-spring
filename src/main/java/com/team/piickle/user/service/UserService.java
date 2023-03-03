@@ -118,7 +118,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void nicknameDuplicationCheck(String nickname) {
-        userRepository.findByNickname(nickname)
+        userRepository.findByNickName(nickname)
                 .orElseThrow(() -> new GeneralException(messageSource.getMessage("ALREADY.EXIST.NICKNAME", null, Locale.getDefault())));
     }
 

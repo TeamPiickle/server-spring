@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({TokenProvider.class, AwsConfig.class})
+@EnableConfigurationProperties({TokenProvider.class})
 public class PiickleApplication {
 
     static {
