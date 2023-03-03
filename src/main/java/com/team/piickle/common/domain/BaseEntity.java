@@ -9,13 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@SuperBuilder
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
@@ -23,14 +24,11 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate @Column private LocalDateTime createdAt;
+    @CreatedDate
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
 
-    @LastModifiedDate @Column private LocalDateTime updatedAt;
-
-    @Builder
-    protected BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+    @LastModifiedDate
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
 }
