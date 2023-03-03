@@ -89,7 +89,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new GeneralException(messageSource.getMessage("USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
         return UserProfileResponseDto.builder()
                 .name(user.getName())
-                .nickname(user.getNickName())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .profileImageUrl(user.getProfileImageUrl())
                 .build();
@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
                 .hashedPassword(user.getHashedPassword())
                 .email(user.getEmail())
                 .bookmarks(user.getBookmarks())
-                .nickName(user.getNickName())
+                .nickname(user.getNickname())
                 .name(user.getName())
                 .build();
         user.update(profileImageUrlChangedUser);
@@ -138,7 +138,7 @@ public class UserService implements UserDetailsService {
                 .hashedPassword(user.getHashedPassword())
                 .email(user.getEmail())
                 .bookmarks(user.getBookmarks())
-                .nickName(nickname)
+                .nickname(nickname)
                 .name(user.getName())
                 .build();
         user.update(nicknameChangedUser);
