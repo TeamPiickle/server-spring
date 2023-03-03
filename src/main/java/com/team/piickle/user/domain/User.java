@@ -3,16 +3,17 @@ package com.team.piickle.user.domain;
 import com.team.piickle.bookmark.domain.Bookmark;
 import com.team.piickle.common.domain.BaseEntity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AttributeOverride(name = "id", column = @Column(name = "USER_ID"))
-@SuperBuilder
+@Builder
+@AllArgsConstructor
 @Table(name = "USERS")
 @Entity
 public class User extends BaseEntity {
@@ -33,6 +34,18 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @Builder
+    public User(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String email, String name, String nickName, GenderStatus gender, String hashedPassword, String profileImageUrl, List<Bookmark> bookmarks) {
+        super(id, createdAt, updatedAt);
+        this.email = email;
+        this.name = name;
+        this.nickname= nickName;
+        this.gender = gender;
+        this.hashedPassword = hashedPassword;
+        this.profileImageUrl = profileImageUrl;
+        this.bookmarks = bookmarks;
+    }
 
 
     public void update(User nicknameChangedUser) {
