@@ -36,7 +36,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:_'
 	implementation 'io.jsonwebtoken:jjwt-jackson:_'
     implementation 'com.amazonaws:aws-java-sdk-s3:_'
-    compileOnly 'org.projectlombok:lombok:_'
+	compileOnly 'org.projectlombok:lombok:_'
 	runtimeOnly 'com.mysql:mysql-connector-j:_'
 	runtimeOnly 'com.h2database:h2:_'
 	annotationProcessor 'org.projectlombok:lombok:_'
