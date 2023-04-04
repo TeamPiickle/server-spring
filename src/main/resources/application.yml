@@ -5,6 +5,19 @@ logging:
   level:
     org.hibernate.type.descriptor.sql: trace
 
+cloud:
+  aws:
+    s3:
+      bucket: piiklebucket11
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
 jwt:
   header: Authorization
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
