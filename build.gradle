@@ -5,7 +5,7 @@ plugins {
     id "com.diffplug.spotless"
 }
 
-group = 'com.team'
+group = 'main.java.com.team'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -41,7 +41,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2:_'
 	annotationProcessor 'org.projectlombok:lombok:_'
 	annotationProcessor Spring.boot.configurationProcessor
-	testImplementation Spring.boot.test
+    testImplementation Spring.boot.test
 	testImplementation Spring.security.spring_security_test
 }
 
