@@ -43,6 +43,7 @@ public class SecurityConfig {
                 web.ignoring()
                         .antMatchers(
                                 "/h2-console/**",
+                                "/*",
                                 "/favicon.ico",
                                 "/js/**",
                                 "/css/**",
@@ -72,7 +73,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users", "/users/login")
+                .antMatchers("/users", "/users/login", "/users/test", "/admin/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
