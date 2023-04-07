@@ -1,27 +1,27 @@
 package com.team.piickle.ballot.domain;
 
-import com.team.piickle.common.domain.BaseEntity;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AttributeOverride(name = "id", column = @Column(name = "BALLOT_TOPIC_ID"))
-@Entity
-public class BallotTopic extends BaseEntity {
+@Document(collection = "ballottopics")
+public class BallotTopic {
 
-    @Column private String topic;
+    @Id
+    private String id;
 
-    @Column private Long order;
+    private String topic;
 
-    @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
-    private List<BallotItem> ballotItems = new ArrayList<>();
+    private long order;
+
+    private long __v;
+
+
+//    @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
+//    private List<BallotItem> ballotItems = new ArrayList<>();
 }

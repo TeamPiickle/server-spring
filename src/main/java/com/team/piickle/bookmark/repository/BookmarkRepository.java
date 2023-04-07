@@ -1,20 +1,13 @@
 package com.team.piickle.bookmark.repository;
 
 import com.team.piickle.bookmark.domain.Bookmark;
-import com.team.piickle.card.domain.Card;
-import com.team.piickle.user.domain.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
+public interface BookmarkRepository extends MongoRepository<Bookmark, String> {
 
-@Repository
-public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
+    //@Query("select bk.card.id from Bookmark bk group by bk.card.id order by count(bk.card.id) DESC")
+    //List<Long> findBestCardsId();
 
-    @Query("select bk.card.id from Bookmark bk group by bk.card.id order by count(bk.card.id) DESC")
-    List<Long> findBestCardsId();
-
-    boolean findByUser(User user);
-    Bookmark findByUserIdAndCardId(Long id, Long id1);
+    //boolean findByUser(User user);
+    //Bookmark findByUserIdAndCardId(String id, String id1);
 }
