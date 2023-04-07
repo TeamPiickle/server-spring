@@ -2,8 +2,6 @@ package com.team.piickle.card.dto;
 
 import com.team.piickle.card.category.domain.Category;
 import com.team.piickle.card.domain.Card;
-import com.team.piickle.card.filter.CardFilter;
-import com.team.piickle.card.tag.CardTag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CardResponseDto {
-    private Long cardId;
+    private String cardId;
     private String content;
     private List<Category> categories;
-    private List<CardFilter> filters;
-    private List<CardTag> tags;
-
+    private List<String> filters;
+    private List<String> tags;
     private boolean isBookmarked;
 
     public CardResponseDto changeIsBookmarked(boolean bookmarked) {
@@ -34,7 +31,7 @@ public class CardResponseDto {
     public CardResponseDto(Card card) {
         this.cardId = card.getId();
         this.content = card.getContent();
-        this.filters = card.getFilters();
+        //this.filters = card.getFilters();
         this.tags = card.getTags();
     }
 }

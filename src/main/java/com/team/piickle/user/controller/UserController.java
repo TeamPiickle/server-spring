@@ -1,8 +1,10 @@
 package com.team.piickle.user.controller;
 
 import com.team.piickle.auth.jwt.TokenProvider;
+import com.team.piickle.user.domain.User;
 import com.team.piickle.user.dto.UserProfileResponseDto;
 import com.team.piickle.user.dto.UserSignupRequestDto;
+import com.team.piickle.user.repository.UserRepository;
 import com.team.piickle.user.service.UserService;
 import com.team.piickle.util.StatusCode;
 import com.team.piickle.util.dto.DataResponseDto;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 @Slf4j
@@ -28,6 +31,13 @@ public class UserController {
     private final MessageSource messageSource;
 
     private final TokenProvider tokenProvider;
+
+    private final UserRepository userRepository;
+    @GetMapping("/test")
+    private ResponseEntity<ResponseDto> test() {
+        List<User> all = userRepository.findAll();
+        return new ResponseEntity<>(DataResponseDto.of(userRepository.findAll().size(), messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())), HttpStatus.OK);
+    }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     private ResponseEntity<ResponseDto> signup(

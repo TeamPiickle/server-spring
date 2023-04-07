@@ -5,7 +5,6 @@ import com.team.piickle.bookmark.repository.BookmarkRepository;
 import com.team.piickle.card.domain.Card;
 import com.team.piickle.card.repository.CardRepository;
 import com.team.piickle.common.exception.GeneralException;
-import com.team.piickle.user.domain.GenderStatus;
 import com.team.piickle.user.domain.User;
 import com.team.piickle.user.dto.UserProfileResponseDto;
 import com.team.piickle.user.dto.UserSignupRequestDto;
@@ -70,15 +69,15 @@ public class UserService implements UserDetailsService {
             throw new GeneralException(StatusCode.VALIDATION_ERROR, messageSource.getMessage("ALREADY.EXIST.EMAIL", null, Locale.getDefault()));
         }
         String profileImageUrl = "";
-        if (profileImage != null) {
-            profileImageUrl = s3Upload.upload(profileImage);
-        }
+//        if (profileImage != null) {
+//            profileImageUrl = s3Upload.upload(profileImage);
+//        }
         log.info(userSignupRequest.getEmail());
         userRepository.save(
                 User.builder()
                         .email(userSignupRequest.getEmail())
                         .hashedPassword(passwordEncoder.encode(userSignupRequest.getPassword()))
-                        .gender(GenderStatus.MALE)
+                        //.gender(GenderStatus.MALE)
                         .profileImageUrl(profileImageUrl)
                         .build());
     }
@@ -88,7 +87,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(userId)
                 .orElseThrow(() -> new GeneralException(messageSource.getMessage("USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
         return UserProfileResponseDto.builder()
-                .name(user.getName())
+                //.name(user.getName())
                 .nickname(user.getNickname())
                 .email(user.getEmail())
                 .profileImageUrl(user.getProfileImageUrl())
@@ -98,9 +97,9 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void updateProfileImage(String userId, MultipartFile profileImage) throws IOException {
         String profileImageUrl = "";
-        if (profileImage != null) {
-            profileImageUrl = s3Upload.upload(profileImage);
-        }
+//        if (profileImage != null) {
+//            profileImageUrl = s3Upload.upload(profileImage);
+//        }
         User user = userRepository
                 .findByEmail(userId)
                 .orElseThrow(() -> new GeneralException(messageSource.getMessage("USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
@@ -109,9 +108,9 @@ public class UserService implements UserDetailsService {
                 .gender(user.getGender())
                 .hashedPassword(user.getHashedPassword())
                 .email(user.getEmail())
-                .bookmarks(user.getBookmarks())
+                //.bookmarks(user.getBookmarks())
                 .nickname(user.getNickname())
-                .name(user.getName())
+                //.name(user.getName())
                 .build();
         user.update(profileImageUrlChangedUser);
     }
@@ -137,9 +136,9 @@ public class UserService implements UserDetailsService {
                 .gender(user.getGender())
                 .hashedPassword(user.getHashedPassword())
                 .email(user.getEmail())
-                .bookmarks(user.getBookmarks())
+                //.bookmarks(user.getBookmarks())
                 .nickname(nickname)
-                .name(user.getName())
+                //.name(user.getName())
                 .build();
         user.update(nicknameChangedUser);
     }
@@ -148,18 +147,18 @@ public class UserService implements UserDetailsService {
     public Long changeBookmark(String userId, Long cardId) {
         User user = userRepository.findByEmail(userId)
                 .orElseThrow(() -> new GeneralException(messageSource.getMessage("USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
-        Card card = cardRepository.findById(cardId)
+        Card card = cardRepository.findById("cardId")
                 .orElseThrow(() -> new GeneralException(messageSource.getMessage("READ.CARD.FAIL", null, Locale.getDefault())));
 
-        Bookmark bookmark = bookmarkRepository.findByUserIdAndCardId(user.getId(), card.getId());
+        Bookmark bookmark = null;//bookmarkRepository.findByUserIdAndCardId(user.getId(), card.getId());
 
-        if (bookmark == null) {
-            bookmarkRepository.save(Bookmark.builder()
-                    .user(user)
-                    .card(card)
-                    .build());
-            return cardId;
-        }
+//        if (bookmark == null) {
+//            bookmarkRepository.save(Bookmark.builder()
+//                    .user(user)
+//                    .card(card)
+//                    .build());
+//            return cardId;
+//        }
         bookmarkRepository.delete(bookmark);
         return cardId;
     }

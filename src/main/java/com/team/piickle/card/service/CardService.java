@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,15 +24,17 @@ public class CardService {
 
     @Transactional
     public List<CardResponseDto> getBestCardList(Long userId) {
-        List<Long> bestCardsId = bookmarkRepository.findBestCardsId();
-        User user = userRepository.findById(userId)
+        List<Long> bestCardsId = new ArrayList<>();
+                //bookmarkRepository.findBestCardsId();
+        User user = userRepository.findById("userId")
                 .orElseGet(null);
-        List<Card> cardList = cardRepository.findAllByIdList(bestCardsId);
+        List<Card> cardList = new ArrayList<>();
+                //cardRepository.findAllByIdList(new ArrayList<>());
         List<CardResponseDto> cardResponseDtoList = cardList.stream().map(card -> new CardResponseDto(card))
                 .collect(Collectors.toList());
         if (!user.equals(null)) {
             cardResponseDtoList.stream()
-                    .map(card -> card.changeIsBookmarked(bookmarkRepository.findByUser(user)))
+//                    .map(card -> card.changeIsBookmarked(null)
                     .collect(Collectors.toList());
         }
         return cardResponseDtoList;
