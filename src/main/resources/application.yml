@@ -27,7 +27,7 @@ spring:
   jpa:
     hibernate:
       naming:
-        physical-strategy: com.team.piickle.config.CamelCaseToUnderscoresWithUpperCasesNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 ---
 
