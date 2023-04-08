@@ -3,7 +3,7 @@ package com.team.piickle.util.dto;
 import lombok.Getter;
 
 @Getter
-public class KeyValueDto implements Comparable<KeyValueDto>{
+public class KeyValueDto implements Comparable<KeyValueDto> {
     private final String value;
     private final int count;
 

@@ -9,6 +9,9 @@ import com.team.piickle.user.service.UserService;
 import com.team.piickle.util.StatusCode;
 import com.team.piickle.util.dto.DataResponseDto;
 import com.team.piickle.util.dto.ResponseDto;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -17,10 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,15 +32,22 @@ public class UserController {
     private final TokenProvider tokenProvider;
 
     private final UserRepository userRepository;
+
     @GetMapping("/test")
     private ResponseEntity<ResponseDto> test() {
         List<User> all = userRepository.findAll();
-        return new ResponseEntity<>(DataResponseDto.of(userRepository.findAll().size(), messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())), HttpStatus.OK);
+        return new ResponseEntity<>(
+                DataResponseDto.of(
+                        userRepository.findAll().size(),
+                        messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())),
+                HttpStatus.OK);
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     private ResponseEntity<ResponseDto> signup(
-            @RequestBody UserSignupRequestDto userSignupRequestDto, @RequestPart(required = false) MultipartFile profileImageFile) throws IOException {
+            @RequestBody UserSignupRequestDto userSignupRequestDto,
+            @RequestPart(required = false) MultipartFile profileImageFile)
+            throws IOException {
         userService.signup(userSignupRequestDto, profileImageFile);
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
     }
@@ -49,7 +55,11 @@ public class UserController {
     @GetMapping()
     private ResponseEntity<ResponseDto> user(@PathVariable("userId") String userId) {
         UserProfileResponseDto userProfileResponseDto = userService.getUser(userId);
-        return new ResponseEntity<>(DataResponseDto.of(userProfileResponseDto, messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())), HttpStatus.OK);
+        return new ResponseEntity<>(
+                DataResponseDto.of(
+                        userProfileResponseDto,
+                        messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())),
+                HttpStatus.OK);
     }
 
     @GetMapping("/nickname/is-exist")
@@ -81,6 +91,10 @@ public class UserController {
     private ResponseEntity<ResponseDto> bookmark(@RequestBody Long cardId) {
         String userId = tokenProvider.getUserId();
         Long BookmarkedCardId = userService.changeBookmark(userId, cardId);
-        return new ResponseEntity<>(DataResponseDto.of(BookmarkedCardId, messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())), HttpStatus.OK);
+        return new ResponseEntity<>(
+                DataResponseDto.of(
+                        BookmarkedCardId,
+                        messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())),
+                HttpStatus.OK);
     }
 }

@@ -6,14 +6,12 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "ballottopics")
 public class BallotTopic {
 
-    @Id
-    private String id;
+    @Id private String id;
 
     private String topic;
 
@@ -21,7 +19,6 @@ public class BallotTopic {
 
     private long __v;
 
-
-//    @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
-//    private List<BallotItem> ballotItems = new ArrayList<>();
+    //    @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
+    //    private List<BallotItem> ballotItems = new ArrayList<>();
 }

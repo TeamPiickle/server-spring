@@ -14,6 +14,10 @@ import com.team.piickle.user.repository.UserRepository;
 import com.team.piickle.util.dto.KeyValueDto;
 import com.team.piickle.util.excel.Filter;
 import com.team.piickle.util.excel.ForExcelCategory;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -28,11 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -45,7 +44,6 @@ public class AdminService {
     private final CardRepository cardRepository;
 
     private final CategoryRepository categoryRepository;
-
 
     @Transactional
     public void insertCard(MultipartFile cardExcel) throws IOException {
@@ -79,32 +77,33 @@ public class AdminService {
                 if (row.getCell(j).toString().equals("1.0")) {
                     categoryList.add(ForExcelCategory.getValue(j).value());
                 }
-            }//카테고리
+            } // 카테고리
 
             List<Category> categories = categoryRepository.findAllByTitleIn(categoryList);
 
             List<String> filterList = new ArrayList<>();
-            List<ObjectId> getCategoryIds = categories.stream()
-                    .map(category -> new ObjectId(category.getId()))
-                    .collect(Collectors.toList());
+            List<ObjectId> getCategoryIds =
+                    categories.stream()
+                            .map(category -> new ObjectId(category.getId()))
+                            .collect(Collectors.toList());
             for (int j = 12; j <= 25; j++) {
-                if (row.getCell(j).toString().equals("1.0")){
+                if (row.getCell(j).toString().equals("1.0")) {
                     filterList.add(Filter.getValue(j).value());
                 }
-            }//필터
+            } // 필터
 
             filterList.add("태그");
             String[] split = row.getCell(32).toString().split(",");
-            List<String> tagList = Arrays.stream(split)
-                    .map(s -> s.trim()).collect(Collectors.toList());
-            Card card = Card.builder()
-                    .content(content)
-                    .tags(tagList)
-                    .category(getCategoryIds)
-                    .filter(filterList)
-                    .createdAt(String.valueOf(LocalDateTime.now()))
-                    .updatedAt(String.valueOf(LocalDateTime.now()))
-                    .build();
+            List<String> tagList = Arrays.stream(split).map(s -> s.trim()).collect(Collectors.toList());
+            Card card =
+                    Card.builder()
+                            .content(content)
+                            .tags(tagList)
+                            .category(getCategoryIds)
+                            .filter(filterList)
+                            .createdAt(String.valueOf(LocalDateTime.now()))
+                            .updatedAt(String.valueOf(LocalDateTime.now()))
+                            .build();
             cardRepository.save(card);
             System.out.println("성공");
         }
@@ -135,13 +134,16 @@ public class AdminService {
         for (String key : keySet) {
             keyValueDtoList.add(new KeyValueDto(key, hashMap.get(key)));
         }
-        List<String> idList = keyValueDtoList.stream()
-                .map(keyValueDto -> keyValueDto.getValue())
-                .collect(Collectors.toList());
+        List<String> idList =
+                keyValueDtoList.stream()
+                        .map(keyValueDto -> keyValueDto.getValue())
+                        .collect(Collectors.toList());
         List<Card> cardList = cardRepository.findAllByIdIn(idList);
-        List<BookmarkedCardResponseDto> bookmarkedCardResponseDtoList = cardList.stream()
-                .map(card -> new BookmarkedCardResponseDto(card.getContent(), hashMap.get(card.getId())))
-                .collect(Collectors.toList());
+        List<BookmarkedCardResponseDto> bookmarkedCardResponseDtoList =
+                cardList.stream()
+                        .map(
+                                card -> new BookmarkedCardResponseDto(card.getContent(), hashMap.get(card.getId())))
+                        .collect(Collectors.toList());
         Collections.sort(bookmarkedCardResponseDtoList);
         return bookmarkedCardResponseDtoList;
     }

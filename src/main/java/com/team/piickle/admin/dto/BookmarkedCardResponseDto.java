@@ -3,7 +3,7 @@ package com.team.piickle.admin.dto;
 import lombok.Getter;
 
 @Getter
-public class BookmarkedCardResponseDto implements Comparable<BookmarkedCardResponseDto>{
+public class BookmarkedCardResponseDto implements Comparable<BookmarkedCardResponseDto> {
 
     private final String content;
     private final int count;

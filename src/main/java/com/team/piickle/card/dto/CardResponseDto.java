@@ -2,11 +2,10 @@ package com.team.piickle.card.dto;
 
 import com.team.piickle.card.category.domain.Category;
 import com.team.piickle.card.domain.Card;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -28,10 +27,11 @@ public class CardResponseDto {
         }
         return this;
     }
+
     public CardResponseDto(Card card) {
         this.cardId = card.getId();
         this.content = card.getContent();
-        //this.filters = card.getFilters();
+        // this.filters = card.getFilters();
         this.tags = card.getTags();
     }
 }

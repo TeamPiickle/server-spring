@@ -14,6 +14,7 @@ public class PiickleApplication {
     static {
         System.setProperty("com.amazonaws.sdk.disableEc2MetaData", "true");
     }
+
     public static void main(String[] args) {
         SpringApplication.run(PiickleApplication.class, args);
     }

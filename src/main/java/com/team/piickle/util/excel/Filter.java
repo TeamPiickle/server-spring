@@ -18,10 +18,9 @@ public enum Filter {
     FRIENDLY("친근해요", 24),
     BESTFRIEND("절친해요", 25);
 
-
-
     private final int cellNumber;
     private final String value;
+
     Filter(String value, int cellNumber) {
         this.value = value;
         this.cellNumber = cellNumber;
@@ -36,9 +35,6 @@ public enum Filter {
     }
 
     public static Filter getValue(int idx) {
-        return Arrays.stream(values())
-                .filter(value -> value.cellNumber == idx)
-                .findAny()
-                .orElse(null);
+        return Arrays.stream(values()).filter(value -> value.cellNumber == idx).findAny().orElse(null);
     }
 }

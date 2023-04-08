@@ -6,16 +6,14 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@Entity
-//@Table(name = "ballotresults")
+// @Entity
+// @Table(name = "ballotresults")
 @Document(collection = "ballotresults")
 public class BallotResult {
 
-    @Id
-    private String id;
+    @Id private String id;
     private String ballotTopicId;
     private String ballotItemId;
     private String userId;

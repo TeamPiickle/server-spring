@@ -19,17 +19,32 @@ public class UserProfileResponseDto {
     private String profileImageUrl;
 
     public static UserProfileResponseDto toDto(User user) {
-        return new UserProfileResponseDto(user.getNickname(), user.getEmail(), user.getBirthday(), user.getGender(), user.getProfileImageUrl());
+        return new UserProfileResponseDto(
+                user.getNickname(),
+                user.getEmail(),
+                user.getBirthday(),
+                user.getGender(),
+                user.getProfileImageUrl());
     }
 
     @Override
     public String toString() {
-        return "UserProfileResponseDto{" +
-                "nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", gender='" + gender + '\'' +
-                ", profileImageUrl='" + profileImageUrl + '\'' +
-                '}';
+        return "UserProfileResponseDto{"
+                + "nickname='"
+                + nickname
+                + '\''
+                + ", email='"
+                + email
+                + '\''
+                + ", birthday='"
+                + birthday
+                + '\''
+                + ", gender='"
+                + gender
+                + '\''
+                + ", profileImageUrl='"
+                + profileImageUrl
+                + '\''
+                + '}';
     }
 }

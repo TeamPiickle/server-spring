@@ -14,6 +14,7 @@ public enum ForExcelCategory {
 
     private final int cellNumber;
     private final String value;
+
     ForExcelCategory(String value, int cellNumber) {
         this.value = value;
         this.cellNumber = cellNumber;
@@ -28,9 +29,6 @@ public enum ForExcelCategory {
     }
 
     public static ForExcelCategory getValue(int idx) {
-        return Arrays.stream(values())
-                .filter(value -> value.cellNumber == idx)
-                .findAny()
-                .orElse(null);
+        return Arrays.stream(values()).filter(value -> value.cellNumber == idx).findAny().orElse(null);
     }
 }

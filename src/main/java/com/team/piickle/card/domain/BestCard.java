@@ -10,8 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "bestcards")
 public class BestCard {
-    @Id
-    private String id;
+    @Id private String id;
     private String card;
     private String createdAt;
     private String updatedAt;
