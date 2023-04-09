@@ -31,7 +31,7 @@ public class CardResponseDto {
     public CardResponseDto(Card card) {
         this.cardId = card.getId();
         this.content = card.getContent();
-        // this.filters = card.getFilters();
+        this.filters = card.getFilter();
         this.tags = card.getTags();
     }
 }
