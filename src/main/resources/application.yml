@@ -24,9 +24,10 @@ jwt:
   token-validity-in-seconds: 86400
 
 spring:
+  mvc:
+    view:
+      suffix: .html
   thymeleaf:
-    prefix: classpath:templates/
-    suffix: .html
     check-template-location: true
     cache: false
 ---

@@ -48,8 +48,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:_'
 	runtimeOnly 'com.mysql:mysql-connector-j:_'
 	runtimeOnly 'com.h2database:h2:_'
-
-    implementation 'org.thymeleaf:thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     annotationProcessor 'org.projectlombok:lombok:_'
