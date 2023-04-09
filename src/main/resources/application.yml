@@ -24,11 +24,11 @@ jwt:
   token-validity-in-seconds: 86400
 
 spring:
-  jpa:
-    hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    check-template-location: true
+    cache: false
 ---
 
 spring:
