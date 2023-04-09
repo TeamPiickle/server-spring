@@ -129,6 +129,10 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    public int countAllUser() {
+        return userRepository.findAll().size();
+    }
+
     @Transactional
     public List<BookmarkedCardResponseDto> getBookmarkedCards() {
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
