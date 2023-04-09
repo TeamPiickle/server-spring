@@ -67,6 +67,9 @@ public class AdminService {
 
         for (int i = 1; i < sheetAt.getPhysicalNumberOfRows(); i++) {
             Row row = sheetAt.getRow(i);
+            if (Optional.ofNullable(row.getCell(3)).isEmpty()) {
+                continue;
+            }
             Cell cell = row.getCell(3); // 주제
             String content = cell.toString();
             if (content.equals("")) {
@@ -74,9 +77,14 @@ public class AdminService {
             }
             List<String> categoryList = new ArrayList<>();
             for (int j = 4; j <= 11; j++) {
-                if (row.getCell(j).toString().equals("1.0")) {
-                    categoryList.add(ForExcelCategory.getValue(j).value());
-                }
+                final int index = j;
+                Optional.ofNullable(row.getCell(index))
+                        .ifPresent(
+                                category -> {
+                                    if (row.getCell(index).toString().equals("1.0")) {
+                                        categoryList.add(ForExcelCategory.getValue(index).value());
+                                    }
+                                });
             } // 카테고리
 
             List<Category> categories = categoryRepository.findAllByTitleIn(categoryList);
@@ -87,9 +95,14 @@ public class AdminService {
                             .map(category -> new ObjectId(category.getId()))
                             .collect(Collectors.toList());
             for (int j = 12; j <= 25; j++) {
-                if (row.getCell(j).toString().equals("1.0")) {
-                    filterList.add(Filter.getValue(j).value());
-                }
+                final int index = j;
+                Optional.ofNullable(row.getCell(index))
+                        .ifPresent(
+                                f -> {
+                                    if (f.toString().equals("1.0")) {
+                                        filterList.add(Filter.getValue(index).value());
+                                    }
+                                });
             } // 필터
 
             filterList.add("태그");
@@ -105,7 +118,6 @@ public class AdminService {
                             .updatedAt(String.valueOf(LocalDateTime.now()))
                             .build();
             cardRepository.save(card);
-            System.out.println("성공");
         }
     }
 
