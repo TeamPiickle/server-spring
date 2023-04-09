@@ -1,35 +1,37 @@
 package com.team.piickle.user.domain;
 
-import com.team.piickle.bookmark.domain.Bookmark;
-import com.team.piickle.common.domain.BaseEntity;
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AttributeOverride(name = "id", column = @Column(name = "USER_ID"))
-@Builder
-@AllArgsConstructor
-@Table(name = "USERS")
-@Entity
-public class User extends BaseEntity {
+@SuperBuilder
+@Document(collection = "users")
+public class User {
 
-    @Column private String email;
+    @Id private String id;
+    private String email;
+    private String hashedPassword;
+    private String nickname;
+    private String birthday;
+    private String gender;
+    private String profileImageUrl;
+    private List<String> cardIdList;
+    private String createdAt;
+    private String updatedAt;
+    private long v;
 
-    @Column private String name;
-
-    @Column private String nickname;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "GENDER", nullable = false)
-    private GenderStatus gender;
-
-    @Column private String hashedPassword;
-
-    @Column private String profileImageUrl;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Bookmark> bookmarks = new ArrayList<>();
+    public void update(User nicknameChangedUser) {
+        this.email = nicknameChangedUser.email;
+        this.nickname = nicknameChangedUser.nickname;
+        this.nickname = nicknameChangedUser.nickname;
+        this.gender = nicknameChangedUser.gender;
+        this.hashedPassword = nicknameChangedUser.hashedPassword;
+        this.profileImageUrl = nicknameChangedUser.profileImageUrl;
+    }
 }

@@ -1,27 +1,23 @@
 package com.team.piickle.ballot.domain;
 
-import com.team.piickle.common.domain.BaseEntity;
-import com.team.piickle.user.domain.User;
-import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AttributeOverride(name = "id", column = @Column(name = "BALLOT_RESULT_ID"))
-@Entity
-public class BallotResult extends BaseEntity {
+// @Entity
+// @Table(name = "ballotresults")
+@Document(collection = "ballotresults")
+public class BallotResult {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BALLOT_ITEM_ID")
-    private BallotItem ballotItem;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BALLOT_TOPIC_ID")
-    private BallotTopic ballotTopic;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @Id private String id;
+    private String ballotTopicId;
+    private String ballotItemId;
+    private String userId;
+    private String createdAt;
+    private String updatedAt;
+    private long v;
 }

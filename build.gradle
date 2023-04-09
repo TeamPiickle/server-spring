@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-	implementation Spring.boot.data.jpa
+//	implementation Spring.boot.data.jpa
 	implementation Spring.boot.security
 	implementation Spring.boot.validation
 	implementation Spring.boot.web
@@ -35,7 +35,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:_'
 	implementation 'io.jsonwebtoken:jjwt-impl:_'
 	implementation 'io.jsonwebtoken:jjwt-jackson:_'
-	compileOnly 'org.projectlombok:lombok:_'
+    implementation 'com.amazonaws:aws-java-sdk-s3:_'
+    implementation 'org.apache.poi:poi:_'
+    implementation 'org.apache.poi:poi-ooxml:_'
+    implementation Spring.boot.data.mongodb
+    compileOnly 'org.projectlombok:lombok:_'
 	runtimeOnly 'com.mysql:mysql-connector-j:_'
 	runtimeOnly 'com.h2database:h2:_'
 	annotationProcessor 'org.projectlombok:lombok:_'
