@@ -1,5 +1,6 @@
 package com.team.piickle;
 
+import com.team.piickle.auth.admin.AdminUserProperties;
 import com.team.piickle.auth.jwt.TokenProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @SpringBootApplication
 @EnableMongoRepositories
-@EnableConfigurationProperties({TokenProvider.class})
+@EnableConfigurationProperties({TokenProvider.class, AdminUserProperties.class})
 public class PiickleApplication {
 
     static {
