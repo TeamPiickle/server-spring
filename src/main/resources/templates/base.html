@@ -201,31 +201,8 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">가입자 수</h1>
+                <h1 class="h2">항목</h1>
             </div>
-
-            <p th:text="${userCount}+'명'"></p>
-
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">주제별 북마크 현황</h1>
-            </div>
-
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>대화 주제</th>
-                    <th>북마크 수</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="bookmarkCount : ${bookmarkCounts}">
-                    <td th:text="${bookmarkCount.getContent()}"></td>
-                    <td th:text="${bookmarkCount.getCount()}"></td>
-                </tr>
-                </tbody>
-                </tr>
-            </table>
-
         </main>
     </div>
 </div>
