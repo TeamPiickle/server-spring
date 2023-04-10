@@ -63,7 +63,6 @@ public class AdminService {
         Sheet sheetAt = workbook.getSheetAt(0);
         int physicalNumberOfRows = sheetAt.getPhysicalNumberOfRows();
         log.info(String.valueOf(physicalNumberOfRows));
-        Row head = sheetAt.getRow(0);
 
         for (int i = 1; i < sheetAt.getPhysicalNumberOfRows(); i++) {
             Row row = sheetAt.getRow(i);

@@ -41,6 +41,11 @@ public class AdminController {
         return "dashboard";
     }
 
+    @GetMapping("/cards")
+    public String cardHome(Model model) {
+        return "card";
+    }
+
     @PostMapping(
             value = "/addExcel",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
