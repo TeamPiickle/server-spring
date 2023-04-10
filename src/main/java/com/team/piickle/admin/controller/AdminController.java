@@ -57,9 +57,7 @@ public class AdminController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<String> requestToLogin(
-            @RequestBody AdminLoginDto adminLoginDto,
-            HttpSession httpSession
-    ) {
+            @RequestBody AdminLoginDto adminLoginDto, HttpSession httpSession) {
         boolean authorized = adminService.login(adminLoginDto);
         if (authorized) {
             httpSession.setAttribute("isAdmin", true);
