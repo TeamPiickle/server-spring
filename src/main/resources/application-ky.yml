@@ -13,3 +13,6 @@ spring:
       password: rkdudmysql4_
   data.mongodb:
     uri: mongodb://localhost:27017/local?tls=false&retryWrites=true&w=majority
+admin:
+  id: admin
+  password: password
