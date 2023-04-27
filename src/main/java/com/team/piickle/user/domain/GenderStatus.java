@@ -12,4 +12,8 @@ public enum GenderStatus {
 
     private final String status;
     private final String message;
+
+    public String getStatus() {
+        return this.status;
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(collection = "cardmedleys")
 public class CardMedley {
+
     @Id private String id;
     private String title;
     private String sticker;

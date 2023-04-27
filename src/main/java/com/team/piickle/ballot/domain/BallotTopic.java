@@ -12,13 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class BallotTopic {
 
     @Id private String id;
-
     private String topic;
-
     private long order;
-
     private long __v;
-
-    //    @OneToMany(mappedBy = "ballotTopic", cascade = CascadeType.ALL)
-    //    private List<BallotItem> ballotItems = new ArrayList<>();
 }

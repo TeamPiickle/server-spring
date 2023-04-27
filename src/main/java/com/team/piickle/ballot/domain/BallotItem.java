@@ -12,14 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class BallotItem {
 
     @Id private String id;
-
     private String name;
-
     private long v;
-
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @JoinColumn(name = "ballotTopicId")
-    //    private BallotTopic ballotTopic;
-
     private String ballotTopicId;
 }
