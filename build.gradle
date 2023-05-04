@@ -10,6 +10,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -27,25 +31,31 @@ repositories {
 }
 
 dependencies {
-//	implementation Spring.boot.data.jpa
 	implementation Spring.boot.security
 	implementation Spring.boot.validation
 	implementation Spring.boot.web
+
 	implementation 'com.auth0:java-jwt:_'
 	implementation 'io.jsonwebtoken:jjwt-api:_'
 	implementation 'io.jsonwebtoken:jjwt-impl:_'
 	implementation 'io.jsonwebtoken:jjwt-jackson:_'
+
     implementation 'com.amazonaws:aws-java-sdk-s3:_'
     implementation 'org.apache.poi:poi:_'
     implementation 'org.apache.poi:poi-ooxml:_'
+
     implementation Spring.boot.data.mongodb
     compileOnly 'org.projectlombok:lombok:_'
 	runtimeOnly 'com.mysql:mysql-connector-j:_'
 	runtimeOnly 'com.h2database:h2:_'
-	annotationProcessor 'org.projectlombok:lombok:_'
-	annotationProcessor Spring.boot.configurationProcessor
-	testImplementation Spring.boot.test
-	testImplementation Spring.security.spring_security_test
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    annotationProcessor 'org.projectlombok:lombok:_'
+    annotationProcessor Spring.boot.configurationProcessor
+    testImplementation Spring.boot.test
+    testImplementation Spring.security.spring_security_test
+
 }
 
 tasks.named('test') {

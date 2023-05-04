@@ -49,7 +49,8 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/image/**",
                                 "/fonts/**",
-                                "/favicon.ico");
+                                "/favicon.ico",
+                                "/assets/**");
     }
 
     @Bean
@@ -73,7 +74,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users", "/users/login", "/users/test", "/admin/*")
+                .antMatchers("/users", "/users/login", "/users/test", "/admin/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

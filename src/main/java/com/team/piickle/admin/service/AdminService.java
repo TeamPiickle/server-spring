@@ -1,6 +1,8 @@
 package com.team.piickle.admin.service;
 
+import com.team.piickle.admin.controller.AdminLoginDto;
 import com.team.piickle.admin.dto.BookmarkedCardResponseDto;
+import com.team.piickle.auth.admin.AdminUserProperties;
 import com.team.piickle.bookmark.domain.Bookmark;
 import com.team.piickle.bookmark.repository.BookmarkRepository;
 import com.team.piickle.card.domain.Card;
@@ -16,7 +18,13 @@ import com.team.piickle.util.excel.Filter;
 import com.team.piickle.util.excel.ForExcelCategory;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +44,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Service
 public class AdminService {
+
+    private final AdminUserProperties adminUserProperties;
 
     private final UserRepository userRepository;
 
@@ -63,7 +73,6 @@ public class AdminService {
         Sheet sheetAt = workbook.getSheetAt(0);
         int physicalNumberOfRows = sheetAt.getPhysicalNumberOfRows();
         log.info(String.valueOf(physicalNumberOfRows));
-        Row head = sheetAt.getRow(0);
 
         for (int i = 1; i < sheetAt.getPhysicalNumberOfRows(); i++) {
             Row row = sheetAt.getRow(i);
@@ -129,6 +138,10 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    public int countAllUser() {
+        return userRepository.findAll().size();
+    }
+
     @Transactional
     public List<BookmarkedCardResponseDto> getBookmarkedCards() {
         List<Bookmark> bookmarks = bookmarkRepository.findAll();
@@ -158,5 +171,9 @@ public class AdminService {
                         .collect(Collectors.toList());
         Collections.sort(bookmarkedCardResponseDtoList);
         return bookmarkedCardResponseDtoList;
+    }
+
+    public boolean login(AdminLoginDto adminLoginDto) {
+        return adminUserProperties.isMatched(adminLoginDto.getId(), adminLoginDto.getPassword());
     }
 }
