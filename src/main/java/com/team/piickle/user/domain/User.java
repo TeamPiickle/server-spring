@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -54,12 +53,11 @@ public class User {
         this.v = v;
     }
 
-    public void update(User nicknameChangedUser) {
-        this.email = nicknameChangedUser.email;
-        this.nickname = nicknameChangedUser.nickname;
-        this.nickname = nicknameChangedUser.nickname;
-        this.gender = nicknameChangedUser.gender;
-        this.hashedPassword = nicknameChangedUser.hashedPassword;
-        this.profileImageUrl = nicknameChangedUser.profileImageUrl;
+    public void update(User user) {
+        this.email = user.email;
+        this.nickname = user.nickname;
+        this.gender = user.gender;
+        this.hashedPassword = user.hashedPassword;
+        this.profileImageUrl = user.profileImageUrl;
     }
 }

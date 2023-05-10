@@ -1,5 +1,6 @@
 package com.team.piickle.card.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -8,7 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,13 +22,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "cards")
 public class Card {
 
-    @Transient public static final String SEQUENCE_NAME = "users_sequence";
     @Id private String id;
     private String content;
     private List<String> filter = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
     private List<ObjectId> category = new ArrayList<>();
-    private String createdAt;
-    private String updatedAt;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
     private long v;
 }
