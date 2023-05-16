@@ -2,6 +2,7 @@ package com.team.piickle.user.controller;
 
 import com.team.piickle.auth.jwt.TokenProvider;
 import com.team.piickle.user.domain.User;
+import com.team.piickle.user.dto.UserBookmarkedResponseDto;
 import com.team.piickle.user.dto.UserProfileResponseDto;
 import com.team.piickle.user.dto.UserSignupRequestDto;
 import com.team.piickle.user.repository.UserRepository;
@@ -12,6 +13,8 @@ import com.team.piickle.util.dto.ResponseDto;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -52,7 +55,7 @@ public class UserController {
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
     }
 
-    @GetMapping()
+    @GetMapping("/{userId}")
     private ResponseEntity<ResponseDto> user(@PathVariable("userId") String userId) {
         UserProfileResponseDto userProfileResponseDto = userService.getUser(userId);
         return new ResponseEntity<>(
@@ -69,14 +72,20 @@ public class UserController {
     }
 
     @PatchMapping("/nickname")
-    private ResponseEntity<ResponseDto> updateNickname(@RequestBody String Nickname) {
-        userService.updateNickname(tokenProvider.getUserId(), Nickname);
+    private ResponseEntity<ResponseDto> updateNickname(@RequestBody Map<String, String> nickname) {
+        userService.updateNickname(tokenProvider.getUserId(), nickname.get("nickname"));
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
     }
 
     @PutMapping("/me")
     private ResponseEntity<ResponseDto> deleteUser() {
         userService.deleteUser(tokenProvider.getUserId());
+        return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
+    }
+
+    @PatchMapping("/password")
+    private ResponseEntity<ResponseDto> changePassword(@RequestBody Map<String, String> password) {
+        userService.updatePassword(tokenProvider.getUserId(), password.get("password"));
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
     }
 
@@ -87,10 +96,19 @@ public class UserController {
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
     }
 
+    @GetMapping("/bookmarks")
+    private ResponseEntity<ResponseDto> getBookmarks() {
+        List<UserBookmarkedResponseDto> data = userService.getBookmarks(tokenProvider.getUserId());
+        return new ResponseEntity<>(
+                DataResponseDto.of(
+                        data,
+                        "유저 북마크 조회 성공"),
+                HttpStatus.OK);
+    }
+
     @PutMapping("/bookmarks")
-    private ResponseEntity<ResponseDto> bookmark(@RequestBody Long cardId) {
-        String userId = tokenProvider.getUserId();
-        Long BookmarkedCardId = userService.changeBookmark(userId, cardId);
+    private ResponseEntity<ResponseDto> bookmark(@RequestBody Map<String, String> cardId) {
+        String BookmarkedCardId = userService.changeBookmark(tokenProvider.getUserId(), cardId.get("cardId"));
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         BookmarkedCardId,
