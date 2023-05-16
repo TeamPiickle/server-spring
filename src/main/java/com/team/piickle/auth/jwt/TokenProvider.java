@@ -62,9 +62,6 @@ public class TokenProvider implements InitializingBean {
     public String createRefreshToken(Authentication authentication) {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInSeconds * 1000 * 30 * 60);
-        System.out.println(new Date().toString());
-        System.out.println(validity.toString());
-        System.out.println(this.tokenValidityInSeconds * 1000 * 30 * 60);
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
         return JWT.create()
                 .withSubject(authentication.getName())
@@ -91,6 +88,14 @@ public class TokenProvider implements InitializingBean {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {
             throw new RuntimeException("No authentication information.");
+        }
+        return authentication.getName();
+    }
+
+    public String getUserIdNullable() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null) {
+            return null;
         }
         return authentication.getName();
     }
