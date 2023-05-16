@@ -99,9 +99,9 @@ public class AdminService {
             List<Category> categories = categoryRepository.findAllByTitleIn(categoryList);
 
             List<String> filterList = new ArrayList<>();
-            List<ObjectId> getCategoryIds =
+            List<String> getCategoryIds =
                     categories.stream()
-                            .map(category -> new ObjectId(category.getId()))
+                            .map(category -> category.getId())
                             .collect(Collectors.toList());
             for (int j = 12; j <= 25; j++) {
                 final int index = j;
@@ -123,8 +123,8 @@ public class AdminService {
                             .tags(tagList)
                             .category(getCategoryIds)
                             .filter(filterList)
-                            .createdAt(String.valueOf(LocalDateTime.now()))
-                            .updatedAt(String.valueOf(LocalDateTime.now()))
+                            .createdAt(LocalDateTime.now())
+                            .updatedAt(LocalDateTime.now())
                             .build();
             cardRepository.save(card);
         }
