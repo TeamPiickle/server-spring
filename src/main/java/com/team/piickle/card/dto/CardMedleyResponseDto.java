@@ -8,5 +8,4 @@ public class CardMedleyResponseDto extends CardMedleyPreviewResponseDto{
         super(cardMedleyPreviewResponseDto.getId(), cardMedleyPreviewResponseDto.getCoverTitle(), cardMedleyPreviewResponseDto.getTitle(), cardMedleyPreviewResponseDto.getSticker(), cardMedleyPreviewResponseDto.getDescription(), cardMedleyPreviewResponseDto.getPreviewCards());
         this.cards = cards;
     }
-
 }

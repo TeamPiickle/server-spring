@@ -18,4 +18,13 @@ public class CategoryWithCardsResponseDto {
     private String id;
     private String title;
     private List<CardResponseDto> cardList;
+
+    public static CategoryWithCardsResponseDto of(String id, String title, List<CardResponseDto> cardList) {
+        return CategoryWithCardsResponseDto.builder()
+                .id(id)
+                .title(title)
+                .cardList(cardList)
+                .build();
+    }
+
 }

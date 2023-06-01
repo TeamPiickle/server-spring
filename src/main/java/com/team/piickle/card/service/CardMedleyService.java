@@ -29,23 +29,13 @@ public class CardMedleyService {
     private final UserRepository userRepository;
     public List<CardMedleyPreviewResponseDto> getPreviewById() {
         List<CardMedley> allMedley = cardMedleyRepository.findAll();
+
         return allMedley.stream()
                 .map(cardMedley -> {
                     List<CardMedleyPreviewResponseDto.PreviewCard> previewCards = cardRepository.findAllByIdIn(cardMedley.getPreviewCards()).stream()
-                            .map(value -> CardMedleyPreviewResponseDto.PreviewCard
-                                    .builder()
-                                    .content(value.getContent())
-                                    .id(value.getId())
-                                    .build())
+                            .map(value -> CardMedleyPreviewResponseDto.previewCardOf(value))
                             .collect(Collectors.toList());
-                    return CardMedleyPreviewResponseDto.builder()
-                            .id(cardMedley.getId())
-                            .coverTitle(cardMedley.getCoverTitle())
-                            .title(cardMedley.getTitle())
-                            .sticker(cardMedley.getSticker())
-                            .description(cardMedley.getDescription())
-                            .previewCards(previewCards)
-                            .build();
+                    return CardMedleyPreviewResponseDto.of(cardMedley, previewCards);
                 }).collect(Collectors.toList());
     }
 
@@ -57,11 +47,7 @@ public class CardMedleyService {
                 .map(value -> {
                     Card card = cardRepository.findById(value)
                             .orElseThrow(() -> new GeneralException("해당하는 아이디의 카드를 찾을 수 없습니다."));
-                    return CardMedleyPreviewResponseDto.PreviewCard
-                            .builder()
-                            .content(card.getContent())
-                            .id(card.getId())
-                            .build();
+                    return CardMedleyPreviewResponseDto.previewCardOf(card);
                 })
                 .collect(Collectors.toList());
         List<CardResponseDto> cardResponseDtos = cardMedley.getCards()
@@ -77,23 +63,9 @@ public class CardMedleyService {
                             bookmarked = false;
                         }
                     }
-                    return CardResponseDto.builder()
-                                    .cardId(findCard.getId())
-                            .content(findCard.getContent())
-                            .tags(findCard.getTags())
-                            .categories(findCard.getCategory())
-                            .filters(findCard.getFilter())
-                            .isBookmarked(bookmarked)
-                            .build();
+                    return CardResponseDto.of(findCard, bookmarked);
                 }).collect(Collectors.toList());
         Collections.shuffle(cardResponseDtos);
-        return new CardMedleyResponseDto(CardMedleyPreviewResponseDto.builder()
-                .id(cardMedley.getId())
-                .coverTitle(cardMedley.getCoverTitle())
-                .title(cardMedley.getTitle())
-                .sticker(cardMedley.getSticker())
-                .description(cardMedley.getDescription())
-                .previewCards(previewCardList)
-                .build(), cardResponseDtos);
+        return new CardMedleyResponseDto(CardMedleyPreviewResponseDto.of(cardMedley, previewCardList), cardResponseDtos);
     }
 }

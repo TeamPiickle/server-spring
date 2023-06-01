@@ -2,6 +2,7 @@ package com.team.piickle.user.dto;
 
 import com.team.piickle.card.domain.Card;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class UserBookmarkedResponseDto {
     private String cardId;
@@ -17,11 +19,13 @@ public class UserBookmarkedResponseDto {
     private List<String> filter;
     private boolean isBookmark = true;
 
-    public UserBookmarkedResponseDto(Card card) {
-        this.cardId = card.getId();
-        this.content = card.getContent();
-        this.tags = card.getTags();
-        this.filter = card.getFilter();
-        this.isBookmark = true;
+    public static UserBookmarkedResponseDto from(Card card) {
+        return UserBookmarkedResponseDto.builder()
+                .cardId(card.getId())
+                .content(card.getContent())
+                .tags(card.getTags())
+                .filter(card.getFilter())
+                .isBookmark(true)
+                .build();
     }
 }

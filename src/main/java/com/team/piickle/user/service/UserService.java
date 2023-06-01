@@ -234,7 +234,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new GeneralException("존재하지 않는 유저 입니다."));
         List<Card> bookmarkedCard = cardRepository.findAllByIdIn(user.getCardIdList());
         return bookmarkedCard.stream()
-                .map(card -> new UserBookmarkedResponseDto(card))
+                .map(card -> UserBookmarkedResponseDto.from(card))
                 .collect(Collectors.toList());
     }
 }

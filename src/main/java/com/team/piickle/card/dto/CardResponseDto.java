@@ -33,12 +33,25 @@ public class CardResponseDto {
         return this;
     }
 
-    public CardResponseDto(Card card) {
-        this.cardId = card.getId();
-        this.content = card.getContent();
-        this.categories = card.getCategory();
-        this.filters = card.getFilter();
-        this.tags = card.getTags();
-        this.isBookmarked = false;
+    public static CardResponseDto from(Card card) {
+        return CardResponseDto.builder()
+                .cardId(card.getId())
+                .content(card.getContent())
+                .categories(card.getCategory())
+                .filters(card.getFilter())
+                .tags(card.getTags())
+                .isBookmarked(false)
+                .build();
+    }
+
+    public static CardResponseDto of(Card card, boolean isBookmarked) {
+        return CardResponseDto.builder()
+                .cardId(card.getId())
+                .content(card.getContent())
+                .tags(card.getTags())
+                .categories(card.getCategory())
+                .filters(card.getFilter())
+                .isBookmarked(isBookmarked)
+                .build();
     }
 }

@@ -32,7 +32,7 @@ public class CategoryService {
     public List<CategoryResponseDto> getCategories() {
         return categoryRepository.findByOrderByOrder()
                 .stream()
-                .map(value -> new CategoryResponseDto(value))
+                .map(value -> CategoryResponseDto.from(value))
                 .collect(Collectors.toList());
     }
 
@@ -50,15 +50,11 @@ public class CategoryService {
                 .map(value -> {
 
                     if (!bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(value.getId())).isEmpty()) {
-                        return new CardResponseDto(value).changeIsBookmarked(true);
+                        return CardResponseDto.from(value).changeIsBookmarked(true);
                     }
-                    return new CardResponseDto(value);
+                    return CardResponseDto.from(value);
                 }).collect(Collectors.toList());
-        return CategoryWithCardsResponseDto.builder()
-                .cardList(cardList)
-                .id(categoryId)
-                .title(category.getTitle())
-                .build();
+        return CategoryWithCardsResponseDto.of(categoryId, category.getTitle(), cardList);
     }
     public List<CardResponseDto> getCardsBySearch(List<String> search, String userEmail) {
         List<Card> cardList = cardRepository.findByFilter(search);
@@ -70,9 +66,9 @@ public class CategoryService {
                     User user = userRepository.findByEmail(userEmail)
                             .orElseThrow(() -> new GeneralException("아이디에 해당하는 유저를 찾을 수 없습니다."));
                     if (!bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(value.getId())).isEmpty()) {
-                        return new CardResponseDto(value).changeIsBookmarked(true);
+                        return CardResponseDto.from(value).changeIsBookmarked(true);
                     }
-                    return new CardResponseDto(value);
+                    return CardResponseDto.from(value);
                 }).collect(Collectors.toList());
         return cardResponseDtoList;
     }

@@ -37,4 +37,12 @@ public class BallotStatusDto {
         private Integer status;
         private String content;
     }
+
+    public static BallotStatusDto.BallotTopic ballotTopicOf(String id, String ballotTopicContent) {
+        return new BallotTopic(id, ballotTopicContent);
+    }
+
+    public static BallotStatusDto.BallotItem ballotItemOf(String id, Integer status, String content) {
+        return new BallotItem(id, status , content);
+    }
 }

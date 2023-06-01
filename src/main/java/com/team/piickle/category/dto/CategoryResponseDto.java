@@ -2,11 +2,13 @@ package com.team.piickle.category.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team.piickle.category.domain.Category;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class CategoryResponseDto {
 
     @JsonProperty("_id")
@@ -16,11 +18,13 @@ public class CategoryResponseDto {
     private String unicode;
     private String gradation;
 
-    public CategoryResponseDto(Category category) {
-        this.id = category.getId();
-        this.title = category.getTitle();
-        this.content = category.getContent();
-        this.unicode = category.getUnicode();
-        this.gradation = category.getGradation();
+    public static CategoryResponseDto from(Category category) {
+        return CategoryResponseDto.builder()
+                .id(category.getId())
+                .title(category.getTitle())
+                .content(category.getContent())
+                .unicode(category.getUnicode())
+                .gradation(category.getGradation())
+                .build();
     }
 }

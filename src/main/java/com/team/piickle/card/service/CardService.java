@@ -27,7 +27,7 @@ public class CardService {
         }
         List<Card> findCards = cardRepository.findAllByIdIn(cards.stream().map(value -> value.getId()).collect(Collectors.toList()));
         return findCards.stream()
-                .map(value -> new CardResponseDto(value))
+                .map(value -> CardResponseDto.from(value))
                 .collect(Collectors.toList());
     }
 
