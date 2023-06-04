@@ -38,7 +38,7 @@ public class CardMedleyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> getCardMedleyById(@PathVariable(value = "id") String id) {
-        CardMedleyResponseDto data = cardMedleyService.getCardsById(id, tokenProvider.getUserIdNullable());
+        CardMedleyResponseDto data = cardMedleyService.getCardsById(id, tokenProvider.getUserId());
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         data,

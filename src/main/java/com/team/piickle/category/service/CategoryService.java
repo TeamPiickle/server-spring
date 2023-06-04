@@ -17,12 +17,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
 
+    private static final String NO_RESULT = "";
     private static final int CARD_SIZE_PER_REQUEST = 30;
     private final CategoryRepository categoryRepository;
     private final CardRepository cardRepository;
@@ -36,11 +38,11 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public CategoryWithCardsResponseDto getCardsWithIsBookmark(String userEmail, String categoryId) {
+    public CategoryWithCardsResponseDto getCardsWithIsBookmark(Optional<String> userEmail, String categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new GeneralException("해당 id의 카테고리가 없습니다."));
-        User user = userRepository.findByEmail(userEmail)
-                .orElseGet(null);
+        Optional<User> user = userRepository.findByEmail(userEmail.orElse(NO_RESULT));
+
         List<Card> cards = cardRepository.findAllByIdIn(category.getCardIdList());
         List<Card> randomCards = getRandomUniqueNumberInRange(cards.size(), CARD_SIZE_PER_REQUEST)
                 .stream()
@@ -48,22 +50,25 @@ public class CategoryService {
                 .collect(Collectors.toList());
         List<CardResponseDto> cardList = randomCards.stream()
                 .map(value -> {
-
-                    if (!bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(value.getId())).isEmpty()) {
+                    String userId = NO_RESULT;
+                    if (!user.isEmpty()) {
+                        userId = user.get().getId();
+                    }
+                    if (!bookmarkRepository.findByUserAndCard(new ObjectId(userId), new ObjectId(value.getId())).isEmpty()) {
                         return CardResponseDto.from(value).changeIsBookmarked(true);
                     }
                     return CardResponseDto.from(value);
                 }).collect(Collectors.toList());
         return CategoryWithCardsResponseDto.of(categoryId, category.getTitle(), cardList);
     }
-    public List<CardResponseDto> getCardsBySearch(List<String> search, String userEmail) {
+    public List<CardResponseDto> getCardsBySearch(List<String> search, Optional<String> userEmail) {
         List<Card> cardList = cardRepository.findByFilter(search);
         List<Card> randomCardList = getRandomUniqueNumberInRange(cardList.size(), CARD_SIZE_PER_REQUEST).stream()
                 .map(value -> cardList.get(value))
                 .collect(Collectors.toList());
         List<CardResponseDto> cardResponseDtoList = randomCardList.stream()
                 .map(value -> {
-                    User user = userRepository.findByEmail(userEmail)
+                    User user = userRepository.findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                             .orElseThrow(() -> new GeneralException("아이디에 해당하는 유저를 찾을 수 없습니다."));
                     if (!bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(value.getId())).isEmpty()) {
                         return CardResponseDto.from(value).changeIsBookmarked(true);

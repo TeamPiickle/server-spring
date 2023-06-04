@@ -37,7 +37,7 @@ public class BallotController {
 
     @GetMapping()
     private ResponseEntity<ResponseDto> ballotList() {
-        List<BallotTopicResponseDto> ballotTopicList = ballotService.getBallotTopicList(tokenProvider.getUserIdNullable());
+        List<BallotTopicResponseDto> ballotTopicList = ballotService.getBallotTopicList(tokenProvider.getUserId());
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         ballotTopicList,
@@ -47,7 +47,7 @@ public class BallotController {
 
     @GetMapping("/{ballotTopicId}")
     private ResponseEntity<ResponseDto> ballotStatus(@PathVariable(value = "ballotTopicId") String ballotTopicId) {
-        BallotStatusDto data = ballotService.getBallotStatusAndUserSelect(ballotTopicId, tokenProvider.getUserIdNullable());
+        BallotStatusDto data = ballotService.getBallotStatusAndUserSelect(ballotTopicId, tokenProvider.getUserId());
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         data,

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class CardMedleyService {
                 }).collect(Collectors.toList());
     }
 
-    public CardMedleyResponseDto getCardsById(String id, String userEmail) {
+    public CardMedleyResponseDto getCardsById(String id, Optional<String> userEmail) {
         CardMedley cardMedley = cardMedleyRepository.findById(id)
                 .orElseThrow(() -> new GeneralException("해당하는 아이디의 카드 메들리가 없습니다."));
         List<CardMedleyPreviewResponseDto.PreviewCard> previewCardList = cardMedley.getPreviewCards()
@@ -56,8 +57,8 @@ public class CardMedleyService {
                     Card findCard = cardRepository.findById(card)
                             .orElseThrow(() -> new GeneralException("해당하는 아이디의 카드를 찾을 수 없습니다."));
                     boolean bookmarked = true;
-                    if (userEmail != null) {
-                        User user = userRepository.findByEmail(userEmail)
+                    if (!userEmail.isEmpty()) {
+                        User user = userRepository.findByEmail(userEmail.get())
                                 .orElseThrow(() -> new GeneralException("아이디에 해당하는 유저를 찾을 수 없습니다."));
                         if (bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(findCard.getId())).isEmpty()) {
                             bookmarked = false;

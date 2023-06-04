@@ -6,11 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +16,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Setter
@@ -84,19 +86,11 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
     } // 토큰을 꺼내와서 점검
 
-    public String getUserId() {
+    public Optional<String> getUserId() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {
-            throw new RuntimeException("No authentication information.");
+            return Optional.empty();
         }
-        return authentication.getName();
-    }
-
-    public String getUserIdNullable() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null) {
-            return null;
-        }
-        return authentication.getName();
+        return Optional.ofNullable(authentication).map(value -> value.getName());
     }
 }

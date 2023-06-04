@@ -39,7 +39,7 @@ public class CategoryController {
 
     @GetMapping("/{categoryId}")
     private ResponseEntity<ResponseDto> cards(@PathVariable("categoryId") String categoryId) {
-        CategoryWithCardsResponseDto categories = categoryService.getCardsWithIsBookmark(tokenProvider.getUserIdNullable(), categoryId);
+        CategoryWithCardsResponseDto categories = categoryService.getCardsWithIsBookmark(tokenProvider.getUserId(), categoryId);
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         categories,

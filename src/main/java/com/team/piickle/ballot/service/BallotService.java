@@ -20,12 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
 public class BallotService {
+
+    private static final String NO_RESULT = "";
 
     private final BallotItemRepository ballotItemRepository;
     private final BallotResultRepository ballotResultRepository;
@@ -46,31 +49,31 @@ public class BallotService {
     }
 
     @Transactional
-    public List<BallotTopicResponseDto> getBallotTopicList(String userEmail) {
-        if (userEmail == null) {
+    public List<BallotTopicResponseDto> getBallotTopicList(Optional<String> userEmail) {
+        if (userEmail.isEmpty()) {
             List<BallotTopic> ballotTopicList = ballotTopicRepository.findAllByOrderByOrder(PageRequest.of(0, 4));
             return ballotTopicList.stream()
                     .map(ballotTopic -> BallotTopicResponseDto.from(ballotTopic))
                     .collect(Collectors.toList());
         }
-        String userId = "";
-        if (!userRepository.findByEmail(userEmail).isEmpty()) {
-            userId = userRepository.findByEmail(userEmail).get().getId();
+        String userId = NO_RESULT;
+        if (!userRepository.findByEmail(userEmail.orElse(NO_RESULT)).isEmpty()) {
+            userId = userRepository.findByEmail(userEmail.get()).get().getId();
         }
         List<BallotResult> completedIds = ballotResultRepository.findByUserId(userId);
         return getRandomBallotTopics(completedIds);
     }
 
     @Transactional
-    public BallotStatusDto getBallotStatusAndUserSelect(String ballotTopicId, String userEmail) {
+    public BallotStatusDto getBallotStatusAndUserSelect(String ballotTopicId, Optional<String> userEmail) {
         BallotTopic ballotTopic = ballotTopicRepository.findById(ballotTopicId)
                 .orElseThrow(() -> new GeneralException("올바르지 않은 투표 주제 id 입니다."));
         List<BallotItem> ballotItems = ballotItemRepository.findByBallotTopicId(new ObjectId(ballotTopicId));
-        String userId = "";
-        if (!userRepository.findByEmail(userEmail).isEmpty()) {
-            userId = userRepository.findByEmail(userEmail).get().getId();
+        String userId = NO_RESULT;
+        if (!userRepository.findByEmail(userEmail.orElse(NO_RESULT)).isEmpty()) {
+            userId = userRepository.findByEmail(userEmail.orElse(NO_RESULT)).get().getId();
         }
-        String userSelectId = "";
+        String userSelectId = NO_RESULT;
         if (!ballotResultRepository.findByBallotTopicIdAndUserId(new ObjectId(ballotTopicId), new ObjectId(userId)).isEmpty()) {
             userSelectId = ballotResultRepository.findByBallotTopicIdAndUserId(new ObjectId(ballotTopicId), new ObjectId(userId))
                     .get()
@@ -81,7 +84,7 @@ public class BallotService {
         List<BallotStatusDto.BallotItem> ballotItemWithStatusList = ballotItems.stream()
                 .map(value -> {
                     int status = 0;
-                    if (!finalUserSelectId.equals("")) {
+                    if (!finalUserSelectId.equals(NO_RESULT)) {
                         status = Calculation.getRatio(ballotCount, ballotResultRepository.findByBallotItemId(value.getId()).size());
                     }
                     return BallotStatusDto.ballotItemOf(value.getId(), status, value.getName());
@@ -98,7 +101,7 @@ public class BallotService {
     private String getSmallestOrderTopicIdGreaterThan(long order) {
         List<BallotTopic> findBallotTopic = ballotTopicRepository.findOneSmallerOrder(order);
         if (findBallotTopic.size() == 0) {
-            return "";
+            return NO_RESULT;
         }
         return findBallotTopic.get(0).getId();
     }
@@ -106,7 +109,7 @@ public class BallotService {
     private String getLargestOrderTopicIdLessThan(long order) {
         List<BallotTopic> findBallotTopic = ballotTopicRepository.findOneBiggerOrder(order);
         if (findBallotTopic.size() == 0) {
-            return "";
+            return NO_RESULT;
         }
         return findBallotTopic.get(0).getId();
     }

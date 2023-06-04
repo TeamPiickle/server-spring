@@ -15,6 +15,7 @@ import com.team.piickle.util.StatusCode;
 import com.team.piickle.util.s3.S3Upload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.sl.draw.geom.GuideIf;
 import org.bson.types.ObjectId;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -111,14 +113,14 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateProfileImage(String userId, MultipartFile profileImage) throws IOException {
+    public void updateProfileImage(Optional<String> userEmail, MultipartFile profileImage) throws IOException {
         String profileImageUrl = "";
         //        if (profileImage != null) {
         //            profileImageUrl = s3Upload.upload(profileImage);
         //        }
         User user =
                 userRepository
-                        .findByEmail(userId)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -148,13 +150,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteUser(String userId) {}
+    public void deleteUser(Optional<String> userEmail) {}
 
     @Transactional
-    public void updateNickname(String userEmail, String nickname) {
+    public void updateNickname(Optional<String> userEmail, String nickname) {
         User user =
                 userRepository
-                        .findByEmail(userEmail)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -174,10 +176,10 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public String changeBookmark(String userEmail, String cardId) {
+    public String changeBookmark(Optional<String> userEmail, String cardId) {
         User user =
                 userRepository
-                        .findByEmail(userEmail)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -206,10 +208,10 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updatePassword(String userEmail, String password) {
+    public void updatePassword(Optional<String> userEmail, String password) {
         User user =
                 userRepository
-                        .findByEmail(userEmail)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -229,8 +231,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
     @Transactional
-    public List<UserBookmarkedResponseDto> getBookmarks(String userEmail) {
-        User user = userRepository.findByEmail(userEmail)
+    public List<UserBookmarkedResponseDto> getBookmarks(Optional<String> userEmail) {
+        User user = userRepository.findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                 .orElseThrow(() -> new GeneralException("존재하지 않는 유저 입니다."));
         List<Card> bookmarkedCard = cardRepository.findAllByIdIn(user.getCardIdList());
         return bookmarkedCard.stream()
