@@ -26,6 +26,7 @@ public class User {
     private String hashedPassword;
     private String profileImageUrl;
 
+    @Builder.Default
     private List<String> cardIdList = new ArrayList<>();
 
     private String birthday;

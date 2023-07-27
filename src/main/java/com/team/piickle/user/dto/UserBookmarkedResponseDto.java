@@ -17,7 +17,7 @@ public class UserBookmarkedResponseDto {
     private String content;
     private List<String> tags;
     private List<String> filter;
-    private boolean isBookmark = true;
+    private boolean isBookmark;
 
     public static UserBookmarkedResponseDto from(Card card) {
         return UserBookmarkedResponseDto.builder()
