@@ -7,15 +7,14 @@ import com.team.piickle.category.dto.CategoryWithCardsResponseDto;
 import com.team.piickle.category.service.CategoryService;
 import com.team.piickle.util.dto.DataResponseDto;
 import com.team.piickle.util.dto.ResponseDto;
+import java.util.List;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +38,8 @@ public class CategoryController {
 
     @GetMapping("/{categoryId}")
     private ResponseEntity<ResponseDto> cards(@PathVariable("categoryId") String categoryId) {
-        CategoryWithCardsResponseDto categories = categoryService.getCardsWithIsBookmark(tokenProvider.getUserId(), categoryId);
+        CategoryWithCardsResponseDto categories =
+                categoryService.getCardsWithIsBookmark(tokenProvider.getUserId(), categoryId);
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         categories,
@@ -48,12 +48,13 @@ public class CategoryController {
     }
 
     @GetMapping("/cards")
-    private ResponseEntity<ResponseDto> getCardsBySearch(@RequestParam(value = "search", required = false) List<String> search) {
-        List<CardResponseDto> data = categoryService.getCardsBySearch(search, tokenProvider.getUserId());
+    private ResponseEntity<ResponseDto> getCardsBySearch(
+            @RequestParam(value = "search", required = false) List<String> search) {
+        List<CardResponseDto> data =
+                categoryService.getCardsBySearch(search, tokenProvider.getUserId());
         return new ResponseEntity<>(
                 DataResponseDto.of(
-                        data,
-                        messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())),
+                        data, messageSource.getMessage("USER.PROFILE.VIEW.SUCCESS", null, Locale.getDefault())),
                 HttpStatus.OK);
     }
 }

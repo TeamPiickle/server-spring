@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -99,16 +98,13 @@ public class UserController {
     @GetMapping("/bookmarks")
     private ResponseEntity<ResponseDto> getBookmarks() {
         List<UserBookmarkedResponseDto> data = userService.getBookmarks(tokenProvider.getUserId());
-        return new ResponseEntity<>(
-                DataResponseDto.of(
-                        data,
-                        "유저 북마크 조회 성공"),
-                HttpStatus.OK);
+        return new ResponseEntity<>(DataResponseDto.of(data, "유저 북마크 조회 성공"), HttpStatus.OK);
     }
 
     @PutMapping("/bookmarks")
     private ResponseEntity<ResponseDto> bookmark(@RequestBody Map<String, String> cardId) {
-        String BookmarkedCardId = userService.changeBookmark(tokenProvider.getUserId(), cardId.get("cardId"));
+        String BookmarkedCardId =
+                userService.changeBookmark(tokenProvider.getUserId(), cardId.get("cardId"));
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         BookmarkedCardId,

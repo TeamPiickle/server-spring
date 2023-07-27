@@ -13,9 +13,14 @@ import com.team.piickle.user.dto.UserSignupRequestDto;
 import com.team.piickle.user.repository.UserRepository;
 import com.team.piickle.util.StatusCode;
 import com.team.piickle.util.s3.S3Upload;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.bson.types.ObjectId;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,13 +32,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -113,7 +111,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateProfileImage(Optional<String> userEmail, MultipartFile profileImage) throws IOException {
+    public void updateProfileImage(Optional<String> userEmail, MultipartFile profileImage)
+            throws IOException {
         String profileImageUrl = "";
         //        if (profileImage != null) {
         //            profileImageUrl = s3Upload.upload(profileImage);
@@ -193,17 +192,19 @@ public class UserService implements UserDetailsService {
                                         new GeneralException(
                                                 messageSource.getMessage("READ.CARD.FAIL", null, Locale.getDefault())));
 
-        if (bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(cardId)).isEmpty()) {
-            bookmarkRepository.save(Bookmark.builder()
-                    .user(user.getId())
-                    .card(card.getId())
-                    .build());
+        if (bookmarkRepository
+                .findByUserAndCard(new ObjectId(user.getId()), new ObjectId(cardId))
+                .isEmpty()) {
+            bookmarkRepository.save(Bookmark.builder().user(user.getId()).card(card.getId()).build());
             user.getCardIdList().add(card.getId());
             userRepository.save(user);
             return cardId;
         }
         user.getCardIdList().remove(card.getId());
-        bookmarkRepository.delete(bookmarkRepository.findByUserAndCard(new ObjectId(user.getId()), new ObjectId(cardId)).get());
+        bookmarkRepository.delete(
+                bookmarkRepository
+                        .findByUserAndCard(new ObjectId(user.getId()), new ObjectId(cardId))
+                        .get());
         return cardId;
     }
 
@@ -230,10 +231,13 @@ public class UserService implements UserDetailsService {
         user.update(nicknameChangedUser);
         userRepository.save(user);
     }
+
     @Transactional
     public List<UserBookmarkedResponseDto> getBookmarks(Optional<String> userEmail) {
-        User user = userRepository.findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
-                .orElseThrow(() -> new GeneralException("존재하지 않는 유저 입니다."));
+        User user =
+                userRepository
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
+                        .orElseThrow(() -> new GeneralException("존재하지 않는 유저 입니다."));
         List<Card> bookmarkedCard = cardRepository.findAllByIdIn(user.getCardIdList());
         return bookmarkedCard.stream()
                 .map(card -> UserBookmarkedResponseDto.from(card))

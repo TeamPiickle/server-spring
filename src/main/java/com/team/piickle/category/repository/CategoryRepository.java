@@ -3,7 +3,6 @@ package com.team.piickle.category.repository;
 import com.team.piickle.category.domain.Category;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

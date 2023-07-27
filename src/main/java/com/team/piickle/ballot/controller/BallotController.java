@@ -8,15 +8,14 @@ import com.team.piickle.ballot.service.BallotService;
 import com.team.piickle.util.StatusCode;
 import com.team.piickle.util.dto.DataResponseDto;
 import com.team.piickle.util.dto.ResponseDto;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,8 +27,7 @@ public class BallotController {
     private final TokenProvider tokenProvider;
 
     @PostMapping()
-    private ResponseEntity<ResponseDto> ballot(
-            @RequestBody BallotRequestDto ballotRequestDto)
+    private ResponseEntity<ResponseDto> ballot(@RequestBody BallotRequestDto ballotRequestDto)
             throws IOException {
         ballotService.ballot(ballotRequestDto);
         return new ResponseEntity<>(ResponseDto.of(true, StatusCode.OK), HttpStatus.OK);
@@ -37,7 +35,8 @@ public class BallotController {
 
     @GetMapping()
     private ResponseEntity<ResponseDto> ballotList() {
-        List<BallotTopicResponseDto> ballotTopicList = ballotService.getBallotTopicList(tokenProvider.getUserId());
+        List<BallotTopicResponseDto> ballotTopicList =
+                ballotService.getBallotTopicList(tokenProvider.getUserId());
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         ballotTopicList,
@@ -46,12 +45,10 @@ public class BallotController {
     }
 
     @GetMapping("/{ballotTopicId}")
-    private ResponseEntity<ResponseDto> ballotStatus(@PathVariable(value = "ballotTopicId") String ballotTopicId) {
-        BallotStatusDto data = ballotService.getBallotStatusAndUserSelect(ballotTopicId, tokenProvider.getUserId());
-        return new ResponseEntity<>(
-                DataResponseDto.of(
-                        data,
-                        "투표 현황 조회 성공"),
-                HttpStatus.OK);
+    private ResponseEntity<ResponseDto> ballotStatus(
+            @PathVariable(value = "ballotTopicId") String ballotTopicId) {
+        BallotStatusDto data =
+                ballotService.getBallotStatusAndUserSelect(ballotTopicId, tokenProvider.getUserId());
+        return new ResponseEntity<>(DataResponseDto.of(data, "투표 현황 조회 성공"), HttpStatus.OK);
     }
 }

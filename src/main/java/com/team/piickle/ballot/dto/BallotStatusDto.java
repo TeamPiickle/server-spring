@@ -1,9 +1,8 @@
 package com.team.piickle.ballot.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Getter
 @Setter
@@ -24,6 +23,7 @@ public class BallotStatusDto {
     public static class BallotTopic {
         @JsonProperty("_id")
         private String id;
+
         private String ballotTopicContent;
     }
 
@@ -34,6 +34,7 @@ public class BallotStatusDto {
     public static class BallotItem {
         @JsonProperty("_id")
         private String id;
+
         private Integer status;
         private String content;
     }
@@ -43,6 +44,6 @@ public class BallotStatusDto {
     }
 
     public static BallotStatusDto.BallotItem ballotItemOf(String id, Integer status, String content) {
-        return new BallotItem(id, status , content);
+        return new BallotItem(id, status, content);
     }
 }

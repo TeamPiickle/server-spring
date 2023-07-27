@@ -13,6 +13,7 @@ public class CategoryResponseDto {
 
     @JsonProperty("_id")
     private String id;
+
     private String title;
     private String content;
     private String unicode;

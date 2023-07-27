@@ -9,5 +9,6 @@ import lombok.Setter;
 public class CardIdAndCntDto {
     @JsonProperty("_id")
     private String id;
+
     private int count;
 }

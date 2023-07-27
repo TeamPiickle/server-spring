@@ -1,5 +1,8 @@
 package com.team.piickle.user.domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,20 +25,29 @@ public class User {
     private String hashedPassword;
     private String profileImageUrl;
 
-    @Builder.Default
-    private List<String> cardIdList = new ArrayList<>();
+    @Builder.Default private List<String> cardIdList = new ArrayList<>();
 
     private String birthday;
     private String gender;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @CreatedDate private LocalDateTime createdAt;
+    @LastModifiedDate private LocalDateTime updatedAt;
     private long v;
 
     @Builder
-    public User(String id, String email, String name, String nickname, String hashedPassword, String profileImageUrl, List<String> cardIdList, String birthday, String gender, LocalDateTime createdAt, LocalDateTime updatedAt, long v) {
+    public User(
+            String id,
+            String email,
+            String name,
+            String nickname,
+            String hashedPassword,
+            String profileImageUrl,
+            List<String> cardIdList,
+            String birthday,
+            String gender,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            long v) {
         this.id = id;
         this.email = email;
         this.name = name;

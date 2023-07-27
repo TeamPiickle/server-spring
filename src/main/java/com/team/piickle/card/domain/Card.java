@@ -22,15 +22,10 @@ public class Card {
 
     @Id private String id;
     private String content;
-    @Builder.Default
-    private List<String> filter = new ArrayList<>();
-    @Builder.Default
-    private List<String> tags = new ArrayList<>();
-    @Builder.Default
-    private List<String> category = new ArrayList<>();
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @Builder.Default private List<String> filter = new ArrayList<>();
+    @Builder.Default private List<String> tags = new ArrayList<>();
+    @Builder.Default private List<String> category = new ArrayList<>();
+    @CreatedDate private LocalDateTime createdAt;
+    @LastModifiedDate private LocalDateTime updatedAt;
     private long v;
 }

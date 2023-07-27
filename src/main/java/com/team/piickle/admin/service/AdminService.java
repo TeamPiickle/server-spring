@@ -35,7 +35,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,9 +99,7 @@ public class AdminService {
 
             List<String> filterList = new ArrayList<>();
             List<String> getCategoryIds =
-                    categories.stream()
-                            .map(category -> category.getId())
-                            .collect(Collectors.toList());
+                    categories.stream().map(category -> category.getId()).collect(Collectors.toList());
             for (int j = 12; j <= 25; j++) {
                 final int index = j;
                 Optional.ofNullable(row.getCell(index))

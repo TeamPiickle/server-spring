@@ -1,16 +1,17 @@
 package com.team.piickle.ballot.repository;
 
 import com.team.piickle.ballot.domain.BallotResult;
+import java.util.List;
+import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface BallotResultRepository extends MongoRepository<BallotResult, String> {
-    Optional<BallotResult> findByBallotTopicIdAndUserIdAndGuestId(ObjectId ballotTopicId, ObjectId userId, ObjectId guestId);
+    Optional<BallotResult> findByBallotTopicIdAndUserIdAndGuestId(
+            ObjectId ballotTopicId, ObjectId userId, ObjectId guestId);
 
-    BallotResult findByBallotTopicIdAndUserIdOrGuestId(String ballotTopicId, String userId, String guestId);
+    BallotResult findByBallotTopicIdAndUserIdOrGuestId(
+            String ballotTopicId, String userId, String guestId);
 
     List<BallotResult> findByUserId(String userId);
 

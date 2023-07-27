@@ -13,16 +13,15 @@ import com.team.piickle.ballot.repository.BallotTopicRepository;
 import com.team.piickle.common.exception.GeneralException;
 import com.team.piickle.user.repository.UserRepository;
 import com.team.piickle.util.calculation.Calculation;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -35,23 +34,31 @@ public class BallotService {
     private final BallotTopicRepository ballotTopicRepository;
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+
     @Transactional
     public void ballot(BallotRequestDto ballotRequestDto) {
         validBallotTopic(ballotRequestDto.getBallotTopicId());
-        BallotResult ballotResult = ballotResultRepository.findByBallotTopicIdAndUserIdOrGuestId(ballotRequestDto.getBallotTopicId(), ballotRequestDto.getUserId(), ballotRequestDto.getGuestId());
+        BallotResult ballotResult =
+                ballotResultRepository.findByBallotTopicIdAndUserIdOrGuestId(
+                        ballotRequestDto.getBallotTopicId(),
+                        ballotRequestDto.getUserId(),
+                        ballotRequestDto.getGuestId());
         validBallotResult(ballotResult, ballotRequestDto.getBallotItemId());
         validBallotItem(ballotRequestDto.getBallotItemId());
-        ballotResultRepository.save(BallotResult.builder()
-                .ballotItemId(String.valueOf(ballotRequestDto.getBallotItemId()))
-                .ballotTopicId(String.valueOf(ballotRequestDto.getBallotTopicId()))
-                .guestId(ballotRequestDto.getGuestId())
-                .userId(String.valueOf(ballotRequestDto.getUserId())).build());
+        ballotResultRepository.save(
+                BallotResult.builder()
+                        .ballotItemId(String.valueOf(ballotRequestDto.getBallotItemId()))
+                        .ballotTopicId(String.valueOf(ballotRequestDto.getBallotTopicId()))
+                        .guestId(ballotRequestDto.getGuestId())
+                        .userId(String.valueOf(ballotRequestDto.getUserId()))
+                        .build());
     }
 
     @Transactional
     public List<BallotTopicResponseDto> getBallotTopicList(Optional<String> userEmail) {
         if (userEmail.isEmpty()) {
-            List<BallotTopic> ballotTopicList = ballotTopicRepository.findAllByOrderByOrder(PageRequest.of(0, 4));
+            List<BallotTopic> ballotTopicList =
+                    ballotTopicRepository.findAllByOrderByOrder(PageRequest.of(0, 4));
             return ballotTopicList.stream()
                     .map(ballotTopic -> BallotTopicResponseDto.from(ballotTopic))
                     .collect(Collectors.toList());
@@ -65,30 +72,44 @@ public class BallotService {
     }
 
     @Transactional
-    public BallotStatusDto getBallotStatusAndUserSelect(String ballotTopicId, Optional<String> userEmail) {
-        BallotTopic ballotTopic = ballotTopicRepository.findById(ballotTopicId)
-                .orElseThrow(() -> new GeneralException("올바르지 않은 투표 주제 id 입니다."));
-        List<BallotItem> ballotItems = ballotItemRepository.findByBallotTopicId(new ObjectId(ballotTopicId));
+    public BallotStatusDto getBallotStatusAndUserSelect(
+            String ballotTopicId, Optional<String> userEmail) {
+        BallotTopic ballotTopic =
+                ballotTopicRepository
+                        .findById(ballotTopicId)
+                        .orElseThrow(() -> new GeneralException("올바르지 않은 투표 주제 id 입니다."));
+        List<BallotItem> ballotItems =
+                ballotItemRepository.findByBallotTopicId(new ObjectId(ballotTopicId));
         String userId = NO_RESULT;
         if (!userRepository.findByEmail(userEmail.orElse(NO_RESULT)).isEmpty()) {
             userId = userRepository.findByEmail(userEmail.orElse(NO_RESULT)).get().getId();
         }
         String userSelectId = NO_RESULT;
-        if (!ballotResultRepository.findByBallotTopicIdAndUserId(new ObjectId(ballotTopicId), new ObjectId(userId)).isEmpty()) {
-            userSelectId = ballotResultRepository.findByBallotTopicIdAndUserId(new ObjectId(ballotTopicId), new ObjectId(userId))
-                    .get()
-                    .getId();
+        if (!ballotResultRepository
+                .findByBallotTopicIdAndUserId(new ObjectId(ballotTopicId), new ObjectId(userId))
+                .isEmpty()) {
+            userSelectId =
+                    ballotResultRepository
+                            .findByBallotTopicIdAndUserId(new ObjectId(ballotTopicId), new ObjectId(userId))
+                            .get()
+                            .getId();
         }
         int ballotCount = ballotResultRepository.findByBallotTopicId(ballotTopicId).size();
         String finalUserSelectId = userSelectId;
-        List<BallotStatusDto.BallotItem> ballotItemWithStatusList = ballotItems.stream()
-                .map(value -> {
-                    int status = 0;
-                    if (!finalUserSelectId.equals(NO_RESULT)) {
-                        status = Calculation.getRatio(ballotCount, ballotResultRepository.findByBallotItemId(value.getId()).size());
-                    }
-                    return BallotStatusDto.ballotItemOf(value.getId(), status, value.getName());
-                }).collect(Collectors.toList());
+        List<BallotStatusDto.BallotItem> ballotItemWithStatusList =
+                ballotItems.stream()
+                        .map(
+                                value -> {
+                                    int status = 0;
+                                    if (!finalUserSelectId.equals(NO_RESULT)) {
+                                        status =
+                                                Calculation.getRatio(
+                                                        ballotCount,
+                                                        ballotResultRepository.findByBallotItemId(value.getId()).size());
+                                    }
+                                    return BallotStatusDto.ballotItemOf(value.getId(), status, value.getName());
+                                })
+                        .collect(Collectors.toList());
         return BallotStatusDto.builder()
                 .ballotItems(ballotItemWithStatusList)
                 .ballotTopic(BallotStatusDto.ballotTopicOf(ballotTopicId, ballotTopic.getTopic()))
@@ -115,32 +136,43 @@ public class BallotService {
     }
 
     private List<BallotTopicResponseDto> getRandomBallotTopics(List<BallotResult> completedIds) {
-        List<BallotTopicResponseDto> randomBallotTopicsExcludeCompleted = ballotTopicRepository.findByIdNinOrderByOrder(completedIds.stream()
-                        .map(ballotTopic -> ballotTopic.getBallotTopicId())
-                        .collect(Collectors.toList()), PageRequest.of(0, 4))
-                .stream()
-                .map(ballotTopic -> BallotTopicResponseDto.from(ballotTopic))
-                .collect(Collectors.toList());
+        List<BallotTopicResponseDto> randomBallotTopicsExcludeCompleted =
+                ballotTopicRepository
+                        .findByIdNinOrderByOrder(
+                                completedIds.stream()
+                                        .map(ballotTopic -> ballotTopic.getBallotTopicId())
+                                        .collect(Collectors.toList()),
+                                PageRequest.of(0, 4))
+                        .stream()
+                        .map(ballotTopic -> BallotTopicResponseDto.from(ballotTopic))
+                        .collect(Collectors.toList());
         if (randomBallotTopicsExcludeCompleted.size() < 4) {
-            List<BallotTopicResponseDto> randomBallotTopicsCompleted = ballotTopicRepository.findByIdInOrderByOrder(completedIds.stream()
-                            .map(ballotTopic -> ballotTopic.getBallotTopicId())
-                            .collect(Collectors.toList()), PageRequest.of(0, 4 - randomBallotTopicsExcludeCompleted.size()))
-                    .stream()
-                    .map(ballotTopic -> BallotTopicResponseDto.from(ballotTopic))
-                    .collect(Collectors.toList());
-            return Stream.concat(randomBallotTopicsCompleted.stream(), randomBallotTopicsExcludeCompleted.stream())
+            List<BallotTopicResponseDto> randomBallotTopicsCompleted =
+                    ballotTopicRepository
+                            .findByIdInOrderByOrder(
+                                    completedIds.stream()
+                                            .map(ballotTopic -> ballotTopic.getBallotTopicId())
+                                            .collect(Collectors.toList()),
+                                    PageRequest.of(0, 4 - randomBallotTopicsExcludeCompleted.size()))
+                            .stream()
+                            .map(ballotTopic -> BallotTopicResponseDto.from(ballotTopic))
+                            .collect(Collectors.toList());
+            return Stream.concat(
+                            randomBallotTopicsCompleted.stream(), randomBallotTopicsExcludeCompleted.stream())
                     .collect(Collectors.toList());
         }
         return randomBallotTopicsExcludeCompleted;
     }
 
     private void validBallotTopic(String ballotTopicId) {
-        ballotTopicRepository.findById(String.valueOf(ballotTopicId))
+        ballotTopicRepository
+                .findById(String.valueOf(ballotTopicId))
                 .orElseThrow(() -> new GeneralException("올바르지 않은 투표 주제 id 입니다."));
     }
 
     private void validBallotItem(String ballotItemId) {
-        ballotItemRepository.findById(ballotItemId)
+        ballotItemRepository
+                .findById(ballotItemId)
                 .orElseThrow(() -> new GeneralException("올바르지 않은 투표 항목 id 입니다."));
     }
 

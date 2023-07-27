@@ -12,6 +12,7 @@ import lombok.Setter;
 public class BallotTopicResponseDto {
     @JsonProperty("_id")
     private String ballotTopicId;
+
     private String title;
 
     public static BallotTopicResponseDto from(BallotTopic ballotTopic) {
