@@ -1,12 +1,10 @@
 package com.team.piickle.card.service;
 
+import com.team.piickle.bookmark.dto.CardIdAndCntDto;
 import com.team.piickle.bookmark.repository.BookmarkRepository;
 import com.team.piickle.card.domain.Card;
 import com.team.piickle.card.dto.CardResponseDto;
 import com.team.piickle.card.repository.CardRepository;
-import com.team.piickle.user.domain.User;
-import com.team.piickle.user.repository.UserRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,22 +17,29 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final UserRepository userRepository;
 
     @Transactional
-    public List<CardResponseDto> getBestCardList(Long userId) {
-        List<Long> bestCardsId = new ArrayList<>();
-        // bookmarkRepository.findBestCardsId();
-        User user = userRepository.findById("userId").orElseGet(null);
-        List<Card> cardList = new ArrayList<>();
-        // cardRepository.findAllByIdList(new ArrayList<>());
-        List<CardResponseDto> cardResponseDtoList =
-                cardList.stream().map(card -> new CardResponseDto(card)).collect(Collectors.toList());
-        if (!user.equals(null)) {
-            cardResponseDtoList.stream()
-                    //                    .map(card -> card.changeIsBookmarked(null)
-                    .collect(Collectors.toList());
+    public List<CardResponseDto> getBestCardList(int size) {
+        List<CardIdAndCntDto> cards = findBestCardsLimit(size);
+        if (cards.size() < size) {
+            cards.addAll(findExtraCardsExceptFor(cards, size));
         }
-        return cardResponseDtoList;
+        List<Card> findCards =
+                cardRepository.findAllByIdIn(
+                        cards.stream().map(value -> value.getId()).collect(Collectors.toList()));
+        return findCards.stream()
+                .map(value -> CardResponseDto.from(value))
+                .collect(Collectors.toList());
+    }
+
+    private List<CardIdAndCntDto> findExtraCardsExceptFor(List<CardIdAndCntDto> cards, int size) {
+        return cardRepository.findByNIdAndSortAndExtraLimit(
+                cards.stream().map(value -> value.getId()).collect(Collectors.toList()),
+                size - cards.size());
+    }
+
+    private List<CardIdAndCntDto> findBestCardsLimit(int size) {
+        List<CardIdAndCntDto> cardIdAndCntDtos = bookmarkRepository.groupByCardAndSort(size);
+        return cardIdAndCntDtos;
     }
 }

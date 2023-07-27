@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class ResponseDto {
 
     private final Boolean success;
-    private final Integer code;
+    private final Integer status;
     private final String message;
 
     public static ResponseDto of(Boolean success, StatusCode code) {

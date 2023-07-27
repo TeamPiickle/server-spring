@@ -1,14 +1,24 @@
 package com.team.piickle.bookmark.repository;
 
 import com.team.piickle.bookmark.domain.Bookmark;
+import com.team.piickle.bookmark.dto.CardIdAndCntDto;
+import java.util.List;
+import java.util.Optional;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BookmarkRepository extends MongoRepository<Bookmark, String> {
 
-    // @Query("select bk.card.id from Bookmark bk group by bk.card.id order by count(bk.card.id)
-    // DESC")
-    // List<Long> findBestCardsId();
+    Optional<Bookmark> findByUserAndCard(ObjectId user, ObjectId card);
 
-    // boolean findByUser(User user);
-    // Bookmark findByUserIdAndCardId(String id, String id1);
+    List<Bookmark> findAll();
+
+    @Aggregation(
+            pipeline = {
+                "{'$group':{'_id':$card, 'count': {$sum: 1} }}",
+                "{'$sort' : {'count' : -1, '_id' :  1}}",
+                "{'$limit': ?0}"
+            })
+    List<CardIdAndCntDto> groupByCardAndSort(int size);
 }

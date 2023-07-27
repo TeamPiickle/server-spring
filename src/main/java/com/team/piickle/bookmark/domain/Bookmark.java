@@ -1,11 +1,13 @@
 package com.team.piickle.bookmark.domain;
 
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -15,9 +17,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Bookmark {
 
     @Id private String id;
-    private ObjectId card;
-    private ObjectId user;
-    private String createdAt;
-    private String updatedAt;
+    private String card;
+    private String user;
+    @CreatedDate private LocalDateTime createdAt;
+    @LastModifiedDate private LocalDateTime updatedAt;
     private long v;
 }

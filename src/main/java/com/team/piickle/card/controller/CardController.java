@@ -12,7 +12,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,12 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
     private final CardService cardService;
+    private static final int BEST_PIICKLE_SIZE = 30;
     private final MessageSource messageSource;
 
     @GetMapping("/best")
-    private ResponseEntity<ResponseDto> user(
-            @PathVariable(value = "userId", required = false) Long userId) {
-        List<CardResponseDto> bestCardList = cardService.getBestCardList(userId);
+    private ResponseEntity<ResponseDto> user() {
+        List<CardResponseDto> bestCardList = cardService.getBestCardList(BEST_PIICKLE_SIZE);
         return new ResponseEntity<>(
                 DataResponseDto.of(
                         bestCardList,

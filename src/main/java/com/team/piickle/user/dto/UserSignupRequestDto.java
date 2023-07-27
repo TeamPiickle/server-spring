@@ -8,5 +8,7 @@ import lombok.Setter;
 public class UserSignupRequestDto {
 
     private String email;
+    private String nickname;
+    private String birthday;
     private String password;
 }

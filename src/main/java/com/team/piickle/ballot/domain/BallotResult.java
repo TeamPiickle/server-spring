@@ -1,15 +1,16 @@
 package com.team.piickle.ballot.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// @Entity
-// @Table(name = "ballotresults")
 @Document(collection = "ballotresults")
 public class BallotResult {
 
@@ -17,7 +18,13 @@ public class BallotResult {
     private String ballotTopicId;
     private String ballotItemId;
     private String userId;
-    private String createdAt;
-    private String updatedAt;
+    private String guestId;
+    @CreatedDate private LocalDateTime createdAt;
+    @LastModifiedDate private LocalDateTime updatedAt;
     private long v;
+
+    public BallotResult update(String ballotItemId) {
+        this.ballotItemId = ballotItemId;
+        return this;
+    }
 }

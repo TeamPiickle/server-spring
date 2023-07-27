@@ -5,7 +5,9 @@ import com.team.piickle.bookmark.repository.BookmarkRepository;
 import com.team.piickle.card.domain.Card;
 import com.team.piickle.card.repository.CardRepository;
 import com.team.piickle.common.exception.GeneralException;
+import com.team.piickle.user.domain.GenderStatus;
 import com.team.piickle.user.domain.User;
+import com.team.piickle.user.dto.UserBookmarkedResponseDto;
 import com.team.piickle.user.dto.UserProfileResponseDto;
 import com.team.piickle.user.dto.UserSignupRequestDto;
 import com.team.piickle.user.repository.UserRepository;
@@ -15,8 +17,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,6 +47,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info(username);
         User user =
                 userRepository
                         .findByEmail(username)
@@ -56,10 +62,6 @@ public class UserService implements UserDetailsService {
         } else {
             log.info("User found in the database: {}", username);
         }
-        //        List<GrantedAuthority> authorities = user.getRoles().stream()
-        //                .map(role ->
-        //                        new SimpleGrantedAuthority(role.getName()))
-        //                .collect(Collectors.toList());
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return new org.springframework.security.core.userdetails.User(
@@ -83,16 +85,18 @@ public class UserService implements UserDetailsService {
                 User.builder()
                         .email(userSignupRequest.getEmail())
                         .hashedPassword(passwordEncoder.encode(userSignupRequest.getPassword()))
-                        // .gender(GenderStatus.MALE)
+                        .nickname(userSignupRequest.getNickname())
+                        .birthday(userSignupRequest.getBirthday())
+                        .gender(GenderStatus.MALE.getStatus())
                         .profileImageUrl(profileImageUrl)
                         .build());
     }
 
     @Transactional
-    public UserProfileResponseDto getUser(String userId) {
+    public UserProfileResponseDto getUser(String userEmail) {
         User user =
                 userRepository
-                        .findByEmail(userId)
+                        .findByEmail(userEmail)
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -107,14 +111,15 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void updateProfileImage(String userId, MultipartFile profileImage) throws IOException {
+    public void updateProfileImage(Optional<String> userEmail, MultipartFile profileImage)
+            throws IOException {
         String profileImageUrl = "";
         //        if (profileImage != null) {
         //            profileImageUrl = s3Upload.upload(profileImage);
         //        }
         User user =
                 userRepository
-                        .findByEmail(userId)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -144,13 +149,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void deleteUser(String userId) {}
+    public void deleteUser(Optional<String> userEmail) {}
 
     @Transactional
-    public void updateNickname(String userId, String nickname) {
+    public void updateNickname(Optional<String> userEmail, String nickname) {
         User user =
                 userRepository
-                        .findByEmail(userId)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -162,18 +167,18 @@ public class UserService implements UserDetailsService {
                         .gender(user.getGender())
                         .hashedPassword(user.getHashedPassword())
                         .email(user.getEmail())
-                        // .bookmarks(user.getBookmarks())
                         .nickname(nickname)
-                        // .name(user.getName())
+                        .name(user.getName())
                         .build();
         user.update(nicknameChangedUser);
+        userRepository.save(user);
     }
 
     @Transactional
-    public Long changeBookmark(String userId, Long cardId) {
+    public String changeBookmark(Optional<String> userEmail, String cardId) {
         User user =
                 userRepository
-                        .findByEmail(userId)
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
@@ -181,23 +186,61 @@ public class UserService implements UserDetailsService {
                                                         "USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
         Card card =
                 cardRepository
-                        .findById("cardId")
+                        .findById(cardId)
                         .orElseThrow(
                                 () ->
                                         new GeneralException(
                                                 messageSource.getMessage("READ.CARD.FAIL", null, Locale.getDefault())));
 
-        Bookmark bookmark =
-                null; // bookmarkRepository.findByUserIdAndCardId(user.getId(), card.getId());
-
-        //        if (bookmark == null) {
-        //            bookmarkRepository.save(Bookmark.builder()
-        //                    .user(user)
-        //                    .card(card)
-        //                    .build());
-        //            return cardId;
-        //        }
-        bookmarkRepository.delete(bookmark);
+        if (bookmarkRepository
+                .findByUserAndCard(new ObjectId(user.getId()), new ObjectId(cardId))
+                .isEmpty()) {
+            bookmarkRepository.save(Bookmark.builder().user(user.getId()).card(card.getId()).build());
+            user.getCardIdList().add(card.getId());
+            userRepository.save(user);
+            return cardId;
+        }
+        user.getCardIdList().remove(card.getId());
+        bookmarkRepository.delete(
+                bookmarkRepository
+                        .findByUserAndCard(new ObjectId(user.getId()), new ObjectId(cardId))
+                        .get());
         return cardId;
+    }
+
+    @Transactional
+    public void updatePassword(Optional<String> userEmail, String password) {
+        User user =
+                userRepository
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
+                        .orElseThrow(
+                                () ->
+                                        new GeneralException(
+                                                messageSource.getMessage(
+                                                        "USER.VIEW.BY.EMAIL.FAIL", null, Locale.getDefault())));
+        String hashedPassword = passwordEncoder.encode(password);
+        User nicknameChangedUser =
+                User.builder()
+                        .profileImageUrl(user.getProfileImageUrl())
+                        .gender(user.getGender())
+                        .hashedPassword(hashedPassword)
+                        .email(user.getEmail())
+                        .nickname(user.getNickname())
+                        .name(user.getName())
+                        .build();
+        user.update(nicknameChangedUser);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public List<UserBookmarkedResponseDto> getBookmarks(Optional<String> userEmail) {
+        User user =
+                userRepository
+                        .findByEmail(userEmail.orElseThrow(() -> new GeneralException("토큰이 유효하지 않습니다.")))
+                        .orElseThrow(() -> new GeneralException("존재하지 않는 유저 입니다."));
+        List<Card> bookmarkedCard = cardRepository.findAllByIdIn(user.getCardIdList());
+        return bookmarkedCard.stream()
+                .map(card -> UserBookmarkedResponseDto.from(card))
+                .collect(Collectors.toList());
     }
 }

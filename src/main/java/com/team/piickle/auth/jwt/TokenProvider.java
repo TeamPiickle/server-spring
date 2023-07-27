@@ -10,6 +10,7 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -32,7 +33,7 @@ public class TokenProvider implements InitializingBean {
     private static final String AUTHORITIES_KEY = "auth";
 
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long tokenValidityInSeconds;
     private Key key;
 
     @Override
@@ -49,7 +50,7 @@ public class TokenProvider implements InitializingBean {
                         .collect(Collectors.joining(","));
         log.info(authorities);
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds * 1000 * 10 * 60);
+        Date validity = new Date(now + this.tokenValidityInSeconds * 1000 * 10 * 60);
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
         return JWT.create()
                 .withSubject(authentication.getName())
@@ -61,7 +62,7 @@ public class TokenProvider implements InitializingBean {
 
     public String createRefreshToken(Authentication authentication) {
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds * 1000 * 30 * 60);
+        Date validity = new Date(now + this.tokenValidityInSeconds * 1000 * 30 * 60);
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
         return JWT.create()
                 .withSubject(authentication.getName())
@@ -84,11 +85,11 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
     } // 토큰을 꺼내와서 점검
 
-    public String getUserId() {
+    public Optional<String> getUserId() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {
-            throw new RuntimeException("No authentication information.");
+            return Optional.empty();
         }
-        return authentication.getName();
+        return Optional.ofNullable(authentication).map(value -> value.getName());
     }
 }

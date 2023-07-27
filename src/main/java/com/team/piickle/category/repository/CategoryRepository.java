@@ -3,6 +3,7 @@ package com.team.piickle.category.repository;
 import com.team.piickle.category.domain.Category;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface CategoryRepository extends MongoRepository<Category, String> {
@@ -11,5 +12,6 @@ public interface CategoryRepository extends MongoRepository<Category, String> {
 
     Optional<Category> findById(String id);
 
-    Optional<Category> findByTitle(String content);
+    @Aggregation(pipeline = "{'$sort' : {'order' : 1}}")
+    List<Category> findByOrderByOrder();
 }
